@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ 'Clutter' if q == '' else q }}</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <link rel="shortcut icon" type="image/png" href="/static/favicon.png"/>
+    </head>
+    <body>
+        <div class="row">
+            <div class="left">?</div>
+            <div class="wrapper">
+                <input id="search" spellcheck="false" value="{{ q }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="left">+</div>
+            <div class="wrapper">
+                <input id="add" spellcheck="false">
+            </div>
+        </div>{% for item in items %}
+        <div class="row" title="{{ item[0] }}">
+            <div onclick="edit('{{ item[0] }}');" class="left btn">-</div>
+            <div class="item"><pre>{{ item|link|safe }}</pre></div>
+        </div>{% endfor %}{% if url is not none %}
+        <div class="row">
+            <a class="left" href="{{ url }}">:</a>
+            <div class="item"></div>
+        </div>{% endif %}
+        <script>
+            const search = document.getElementById('search');
+            search.addEventListener('keypress', event => {
+                if (event.key !== 'Enter') { return; }
+                const q = encodeURIComponent(search.value);
+                window.location.href = '/?q=' + q;
+            });
+            const add = document.getElementById('add');
+            add.addEventListener('keypress', event => {
+                if (event.key !== 'Enter') { return; }
+                fetch('/add', { method: 'POST', body: add.value })
+                .then(response => { window.location.reload(); });
+            });
+            function edit(item_id) {
+                window.open('/edit/' + item_id);
+            }
+        </script>
+    </body>
+</html>

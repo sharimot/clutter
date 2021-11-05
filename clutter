@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+which python3
+cd $(dirname $0)
+python3 -m venv venv
+. venv/bin/activate
+python3 -m pip install flask
+export FLASK_APP=clutter
+export FLASK_ENV=development
+flask run
