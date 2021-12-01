@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head lang="zxx">
+        <title>Clutter</title>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA8ElEQVR4nO3YOw5DIRBDUZaeMrt+6VKMhBjAkeKPWcE9xRSMkWVZ1t0zXuP5+/d2jv8RAlc8GIEzHoTAHX+JoBF/iKAVv4mgGd9E0I5fIHjETxC84guCZ3xByLIs64zjYOY/AI/AFQ9G4IwHIXDHXyJoxB8iaMVvImjGNxG04xcIHvETBK/4guAZXxCyLMs64ziY+Q/AI3DFgxE440EI3PGXCBrxhwha8ZsImvFNBO34BYJH/ATBK74geMYXhCzLss44Dmb+A/AIXPFgBM54EAJ3/CWCRvwhglb8JoJmfBNBO36B4BE/QfCKLwie8V+ED6nYnx5MXSliAAAAAElFTkSuQmCC"/>
+        <style>
+            :root {
+                --black: #24292f;
+            }
+            
+            * {
+                font-family: Menlo, Courier, monospace;
+                font-size: 12px;
+            }
+            
+            a {
+                color: #0969da;
+                text-decoration: none;
+            }
+            
+            body {
+                color: var(--black);
+                margin: 0;
+            }
+            
+            input {
+                background-color: transparent;
+                border: none;
+                color: var(--black);
+                height: 100%;
+                padding: 0;
+                width: calc(100% - 32px);
+            }
+            
+            input:focus {
+                outline: none;
+            }
+            
+            input[type="file"] {
+                display: none;
+            }
+            
+            pre {
+                margin: 0;
+                overflow-wrap: break-word;
+                white-space: pre-wrap;
+                width: calc(100% - 32px);
+            }
+            
+            .btn {
+                color: var(--black);
+                cursor: pointer;
+                text-align: center;
+                width: 32px;
+            }
+            
+            .row {
+                display: flex;
+                line-height: 1.25em;
+            }
+            
+            .row:hover {
+                background-color: #f6f8fa;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="row">
+            <a class="btn" id="get" title="Get">=</a>
+            <input id="search" spellcheck="false">
+        </div>
+        <div class="row">
+            <label class="btn" for="set" title="Set">+</label>
+            <input accept="text/plain" id="set" type="file">
+            <input id="add" spellcheck="false">
+        </div>
+        <script>
+            const data = localStorage.getItem('clutter');
+            const items = data === null ? [] : data.split('\n');
+            const params = new URLSearchParams(location.search);
+            const q = params.get('q');
+            const entry = params.get('entry');
+            const until = parseInt(params.get('until'));
+            document.title = q === null || q.trim() === '' ? 'Clutter': q;
+            if (entry !== null) {
+                const url = location.href.split('?')[0];
+                history.replaceState({}, '', url);
+                items.unshift(entry);
+                localStorage.setItem('clutter', items.join('\n'));
+            }
+            const get = document.getElementById('get');
+            get.addEventListener('click', event => {
+                const header = 'data:text/plain;charset=UTF-8,';
+                get.href = header + encodeURIComponent(data);
+                get.download = `clutter-${Math.floor(Date.now() / 1000)}.txt`;
+            });
+            const set = document.getElementById('set');
+            set.addEventListener('change', event => {
+                const reader = new FileReader();
+                reader.addEventListener('load', event => {
+                    localStorage.setItem('clutter', event.target.result);
+                });
+                reader.readAsText(set.files[0]);
+                location.reload();
+            });
+            const search = document.getElementById('search');
+            search.addEventListener('keypress', event => {
+                if (event.key !== 'Enter') { return; }
+                location.href = '?q=' + encodeURIComponent(search.value);
+            });
+            const add = document.getElementById('add');
+            add.addEventListener('keypress', event => {
+                if (event.key !== 'Enter') { return; }
+                location.href = '?entry=' + encodeURIComponent(add.value);
+            });
+            search.value = q;
+            function escape(word) {
+                return word
+                    .replace('&', '&amp;')
+                    .replace('<', '&lt;')
+                    .replace('>', '&gt;');
+            }
+            const words = q === null ? [] : q.split(' ');
+            let i = isNaN(until) ? items.length : until;
+            let count = 0;
+            while (i > 0 && count < 1000) {
+                const j = i;
+                const item = items[items.length - i];
+                const satisfied = words.every(word => {
+                    const lowerItem = item.toLowerCase();
+                    let lowerWord = word.toLowerCase();
+                    if (word[0] === '-') { lowerWord = lowerWord.slice(1); }
+                    const included = lowerItem.includes(lowerWord);
+                    return word[0] === '-' ? !included : included;
+                });
+                if (!satisfied) { i -= 1; continue; }
+                const row = document.createElement('div');
+                const edit = document.createElement('div');
+                const pre = document.createElement('pre');
+                const more = document.createElement('a');
+                const input = document.createElement('input');
+                row.className = 'row';
+                row.append(edit, pre, more, input);
+                edit.className = 'btn';
+                edit.textContent = '-';
+                edit.addEventListener('click', event => {
+                    edit.style.display = 'none';
+                    pre.style.display = 'none';
+                    more.style.display = 'block';
+                    input.style.display = 'block';
+                    input.focus();
+                    const length = input.value.length;
+                    input.setSelectionRange(length, length);
+                    row.style.background = '#f6f8fa';
+                });
+                pre.innerHTML = item.split(' ').map(word => {
+                    if (word.startsWith('http') || word.startsWith('#')) {
+                        const tag = '?q=' + encodeURIComponent(word);
+                        const href = word.startsWith('#') ? tag : escape(word);
+                        return `<a href="${href}">${escape(word)}</a>`;
+                    }
+                    return escape(word);
+                }).join(' ');
+                more.className = 'btn';
+                more.style.display = 'none';
+                more.href = '?until=' + i;
+                more.textContent = ':';
+                input.style.display = 'none';
+                input.setAttribute('spellcheck', 'false');
+                input.setAttribute('value', item);
+                input.addEventListener('keypress', event => {
+                    if (event.key !== 'Enter') { return; }
+                    const data = localStorage.getItem('clutter');
+                    const items = data === null ? [] : data.split('\n');
+                    items[items.length - j] = input.value;
+                    localStorage.setItem('clutter', items.join('\n'));
+                    location.reload();
+                });
+                document.body.append(row);
+                i -= 1;
+                count += 1;
+            }
+        </script>
+    </body>
+</html>
