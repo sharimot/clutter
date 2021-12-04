@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request
 from html import escape
-from os.path import exists
 from urllib.parse import quote
+import os
 
-path = 'clutter.txt'
+if 'CLUTTER' in os.environ:
+    path = os.environ['CLUTTER']
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+else:
+    path = 'clutter.txt'
 
-if not exists(path):
+if not os.path.exists(path):
     with open(path, 'w') as f:
         f.write('')
 
