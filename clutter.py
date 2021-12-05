@@ -33,10 +33,7 @@ def index():
     ok = lambda w, l: w[1:] not in l if w[0] == '-' else w in l
     fine = lambda words, L: all(ok(W.lower(), L.lower()) for W in words)
     items = [(i, lines[i]) for i in desc if fine(words, lines[i])]
-    q_param = [f'q={quote(q)}'] if words else []
-    until_param = [f'until={items[1000][0]}'] if len(items) > 1000 else []
-    url = '/?' + '&'.join(q_param + until_param) if until_param else None
-    return render_template('index.html', items=items[:1000], q=q, url=url)
+    return render_template('index.html', items=items[:1000], q=q)
 
 @app.route('/add', methods=['POST'])
 def add():

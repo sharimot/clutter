@@ -21,11 +21,7 @@
         <div class="row" title="{{ item[0] }}">
             <div onclick="edit('{{ item[0] }}');" class="left btn">-</div>
             <div class="item"><pre>{{ item|link|safe }}</pre></div>
-        </div>{% endfor %}{% if url is not none %}
-        <div class="row">
-            <a class="left" href="{{ url }}">:</a>
-            <div class="item"></div>
-        </div>{% endif %}
+        </div>{% endfor %}
         <script>
             const search = document.getElementById('search');
             search.addEventListener('keypress', event => {
