@@ -7,20 +7,16 @@
     </head>
     <body>
         <div class="row">
-            <div class="left">?</div>
-            <div class="wrapper">
-                <input id="search" spellcheck="false" value="{{ q }}">
-            </div>
+            <div class="left">=</div>
+            <input id="search" spellcheck="false" value="{{ q }}">
         </div>
         <div class="row">
             <div class="left">+</div>
-            <div class="wrapper">
-                <input id="add" spellcheck="false">
-            </div>
+            <input id="add" spellcheck="false">
         </div>{% for item in items %}
         <div class="row" title="{{ item[0] }}">
             <div onclick="edit('{{ item[0] }}');" class="left btn">-</div>
-            <div class="item"><pre>{{ item|link|safe }}</pre></div>
+            <pre>{{ item|link|safe }}</pre>
         </div>{% endfor %}
         <script>
             const search = document.getElementById('search');

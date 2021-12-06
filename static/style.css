@@ -3,7 +3,7 @@
 }
 
 * {
-    font-family: Menlo, Courier;
+    font-family: Menlo, Courier, monospace;
     font-size: 12px;
 }
 
@@ -13,17 +13,17 @@ a {
 }
 
 body {
-    margin: 0;
     color: var(--black);
+    margin: 0;
 }
 
 input {
-    height: 100%;
-    border: none;
-    width: 100%;
-    padding: 0;
-    color: var(--black);
     background-color: transparent;
+    border: none;
+    color: var(--black);
+    height: 100%;
+    padding: 0;
+    width: calc(100% - 32px);
 }
 
 input:focus {
@@ -31,22 +31,19 @@ input:focus {
 }
 
 pre {
+    margin: 0;
+    overflow-wrap: break-word;
     white-space: pre-wrap;
-    display: inline;
+    width: calc(100% - 32px);
 }
 
 .btn {
     cursor: pointer;
 }
 
-.item {
-    width: calc(100% - 32px);
-    overflow-wrap: break-word;
-}
-
 .left {
-    width: 32px;
     text-align: center;
+    width: 32px;
 }
 
 .row {
@@ -56,8 +53,4 @@ pre {
 
 .row:hover {
     background-color: #f6f8fa;
-}
-
-.wrapper {
-    width: 100%;
 }
