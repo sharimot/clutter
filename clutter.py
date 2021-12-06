@@ -37,12 +37,6 @@ def index():
     items = [(i, lines[i]) for i in desc if fine(words, lines[i])]
     return render_template('index.html', items=items[:1000], q=q)
 
-@app.route('/add', methods=['POST'])
-def add():
-    content = request.data.decode('utf-8')
-    write(read() + [content])
-    return 'ok'
-
 @app.route('/edit/<int:item_id>')
 def edit(item_id):
     items = read()
