@@ -19,6 +19,9 @@
             <pre>{{ item|link|safe }}</pre>
         </div>{% endfor %}
         <script>
+            if (new URLSearchParams(location.search).get('entry')) {
+                history.replaceState({}, '', location.href.split('?')[0]);
+            }
             const search = document.getElementById('search');
             search.addEventListener('keypress', event => {
                 if (event.key !== 'Enter') { return; }
@@ -28,8 +31,7 @@
             const add = document.getElementById('add');
             add.addEventListener('keypress', event => {
                 if (event.key !== 'Enter') { return; }
-                fetch('/add', { method: 'POST', body: add.value })
-                .then(response => { window.location.reload(); });
+                location.href = '?entry=' + encodeURIComponent(add.value);
             });
             function edit(item_id) {
                 window.open('/edit/' + item_id);

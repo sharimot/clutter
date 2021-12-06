@@ -26,6 +26,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    if request.args.get('entry'):
+        write(read() + [request.args.get('entry')])
     q = request.args.get('q').strip() if request.args.get('q') else ''
     until, words, lines = request.args.get('until'), q.split(), read()
     limit = int(until) + 1 if until and until.isdigit() else len(lines)
