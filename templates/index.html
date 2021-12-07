@@ -13,11 +13,15 @@
         <div class="row">
             <div class="left">+</div>
             <input id="add" spellcheck="false">
-        </div>{% for item in items %}
-        <div class="row" title="{{ item[0] }}">
-            <div onclick="edit('{{ item[0] }}');" class="left btn">-</div>
-            <pre>{{ item|link|safe }}</pre>
-        </div>{% endfor %}
+        </div>
+        <div id="items">{% for item in items %}
+            <div class="row" id="{{ item[0] }}">
+                <div class="left btn">-</div>
+                <pre>{{ item|link|safe }}</pre>
+                <a class="left none" href="?until={{ item[0] }}">:</a>
+                <input class="none" spellcheck="false" value="{{ item[1] }}">
+            </div>{% endfor %}
+        </div>
         <script>
             if (new URLSearchParams(location.search).get('entry')) {
                 history.replaceState({}, '', location.href.split('?')[0]);
@@ -26,16 +30,35 @@
             search.addEventListener('keypress', event => {
                 if (event.key !== 'Enter') { return; }
                 const q = encodeURIComponent(search.value);
-                window.location.href = '/?q=' + q;
+                location.href = '/?q=' + q;
             });
             const add = document.getElementById('add');
             add.addEventListener('keypress', event => {
                 if (event.key !== 'Enter') { return; }
                 location.href = '?entry=' + encodeURIComponent(add.value);
             });
-            function edit(item_id) {
-                window.open('/edit/' + item_id);
-            }
+            for (const row of document.getElementById('items').children) {
+                const edit = row.querySelector('div');
+                const pre = row.querySelector('pre');
+                const more =row.querySelector('a.left');
+                const input =row.querySelector('input');
+                edit.addEventListener('click', event => {
+                    edit.style.display = 'none';
+                    pre.style.display = 'none';
+                    more.style.display = 'block';
+                    input.style.display = 'block';
+                    input.focus();
+                    const length = input.value.length;
+                    input.setSelectionRange(length, length);
+                    row.style.background = '#f6f8fa';
+                });
+                input.addEventListener('keypress', event => {
+                    if (event.key !== 'Enter') { return; }
+                    const body = row.id + ' ' + input.value;
+                    fetch('/update', { method: 'POST', body: body })
+                    .then(response => { location.reload(); });
+                });
+            };
         </script>
     </body>
 </html>

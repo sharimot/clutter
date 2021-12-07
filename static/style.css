@@ -42,8 +42,13 @@ pre {
 }
 
 .left {
+    color: var(--black);
     text-align: center;
     width: 32px;
+}
+
+.none {
+    display: none;
 }
 
 .row {

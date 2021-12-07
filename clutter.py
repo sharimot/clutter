@@ -37,13 +37,6 @@ def index():
     items = [(i, lines[i]) for i in desc if fine(words, lines[i])]
     return render_template('index.html', items=items[:1000], q=q)
 
-@app.route('/edit/<int:item_id>')
-def edit(item_id):
-    items = read()
-    if not 0 < item_id < len(items):
-        return f'Item {item_id} does not exist.'
-    return render_template('edit.html', item_id=item_id, content=items[item_id])
-
 @app.route('/update', methods=['POST'])
 def update():
     item_id, content = request.data.decode('utf-8').split(' ', 1)
