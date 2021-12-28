@@ -3,15 +3,9 @@ from html import escape
 from urllib.parse import quote
 import os
 
-if 'CLUTTER' in os.environ:
-    path = os.environ['CLUTTER']
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-else:
-    path = 'clutter.txt'
-
-if not os.path.exists(path):
-    with open(path, 'w') as f:
-        f.write('')
+assert 'CLUTTER' in os.environ
+assert os.path.exists(os.environ['CLUTTER'])
+path = os.environ['CLUTTER']
 
 def read():
     with open(path, 'r') as f:
