@@ -9,33 +9,63 @@ path = os.environ['CLUTTER']
 
 def read():
     with open(path, 'r') as f:
-        lines = [None] + f.read().splitlines()
+        lines = f.read().splitlines()
     return lines
 
 def write(lines):
     with open(path, 'w') as f:
-        f.write('\n'.join(lines[1:]))
+        while lines[0] == '':
+            lines = lines[1:]
+        f.write('\n'.join(lines))
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     if request.args.get('entry'):
-        write(read() + [request.args.get('entry')])
-    q = request.args.get('q').strip() if request.args.get('q') else ''
-    until, words, lines = request.args.get('until'), q.split(), read()
-    limit = int(until) + 1 if until and until.isdigit() else len(lines)
-    desc = reversed(range(1, limit))
-    ok = lambda w, l: w[1:] not in l if w[0] == '-' else w in l
-    fine = lambda words, L: all(ok(W.lower(), L.lower()) for W in words)
-    items = [(i, lines[i]) for i in desc if fine(words, lines[i])]
-    return render_template('index.html', items=items[:1000], q=q)
+        write([request.args.get('entry')] + read())
+    q = request.args.get('q') if request.args.get('q') else ''
+    lines, items, sort, trim = read(), [], None, None
+    n = len(lines)
+    for i, line in enumerate(lines):
+        line_ = line.lower()
+        for phrase in q.split('  '):
+            for word in phrase.split(' '):
+                if len(word) == 0:
+                    continue
+                if word[0] == 'T':
+                    trim = word
+                    continue
+                if not sort and word[0] in ['A', 'D']:
+                    sort = word
+                prefixed = word[0] in ['N', 'A', 'D']
+                word_ = word[int(prefixed):].replace('[space]', ' ').lower()
+                if (word[0] == 'N') == (word_ in line_):
+                    break
+            else:
+                items.append((n - i, line))
+                break
+    if sort and '  ' not in q:
+        if len(sort) > 1:
+            key = lambda item: item[1].split(sort[1:])[1]
+        else:
+            key = lambda item: item[1]
+        items = sorted(items, key=key, reverse=(sort[0] == 'D'))
+    if trim:
+        separator = trim[1:].replace('[space]', ' ') if len(trim) > 1 else ' #'
+        items = [(item[0], item[1].split(separator)[0]) for item in items]
+    return render_template('index.html', items=items, q=q)
+
+@app.route('/add', methods=['POST'])
+def add():
+    write([request.data.decode('utf-8')] + read())
+    return 'ok'
 
 @app.route('/update', methods=['POST'])
 def update():
     item_id, content = request.data.decode('utf-8').split(' ', 1)
     items = read()
-    items[int(item_id)] = content
+    items[len(items) - int(item_id)] = content
     write(items)
     return 'ok'
 
@@ -46,7 +76,7 @@ def link(item):
         if word.startswith('http'):
             part = f'<a href="{escape(word)}">{escape(word)}</a>'
         elif word.startswith('#'):
-            part = f'<a href="/?q={quote(word)}">{escape(word)}</a>'
+            part = f'<a class="tag" href="/?q={quote(word)}">{escape(word)}</a>'
         else:
             part = escape(word)
         parts.append(part)

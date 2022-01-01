@@ -1,5 +1,5 @@
 :root {
-    --black: #24292f;
+    --black: black;
 }
 
 * {
@@ -8,13 +8,14 @@
 }
 
 a {
-    color: #0969da;
+    color: blue;
     text-decoration: none;
 }
 
 body {
     color: var(--black);
     margin: 0;
+    padding-bottom: 50vh;
 }
 
 input {
@@ -44,6 +45,7 @@ pre {
 .left {
     color: var(--black);
     text-align: center;
+    user-select: none;
     width: 32px;
 }
 
@@ -57,5 +59,9 @@ pre {
 }
 
 .row:hover {
-    background-color: #f6f8fa;
+    background-color: whitesmoke;
+}
+
+a.tag {
+    color: red;
 }
