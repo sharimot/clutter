@@ -15,7 +15,7 @@ a {
 body {
     color: var(--black);
     margin: 0;
-    padding-bottom: 50vh;
+    padding-bottom: 100vh;
 }
 
 input {
