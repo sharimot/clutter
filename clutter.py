@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from html import escape
 from urllib.parse import quote
+import datetime
 import os
 
 assert 'CLUTTER' in os.environ
@@ -23,7 +24,8 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     if request.args.get('entry'):
-        write([request.args.get('entry')] + read())
+        header = datetime.datetime.now().strftime('#%Y-%m-%d@%H:%M:%S ')
+        write([header + request.args.get('entry')] + read())
     q = request.args.get('q') if request.args.get('q') else ''
     lines, items, sort, trim = read(), [], None, None
     n = len(lines)
@@ -58,7 +60,8 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    write([request.data.decode('utf-8')] + read())
+    header = datetime.datetime.now().strftime('#%Y-%m-%d@%H:%M:%S ')
+    write([header + request.data.decode('utf-8')] + read())
     return 'ok'
 
 @app.route('/update', methods=['POST'])
