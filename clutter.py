@@ -17,7 +17,7 @@ def write(lines):
     with open(path, 'w') as f:
         while lines[0] == '':
             lines = lines[1:]
-        f.write('\n'.join(lines))
+        f.write('\n'.join(lines) + '\n')
 
 app = Flask(__name__)
 
