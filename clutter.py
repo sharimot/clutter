@@ -49,7 +49,7 @@ def index():
                 break
     if sort and '  ' not in q:
         if len(sort) > 1:
-            key = lambda item: item[1].split(sort[1:])[1]
+            key = lambda item: item[1].lower().split(sort[1:].lower(), 1)[1]
         else:
             key = lambda item: item[1]
         items = sorted(items, key=key, reverse=(sort[0] == 'D'))
