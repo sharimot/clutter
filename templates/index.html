@@ -7,7 +7,7 @@
     </head>
     <body>
         <div class="row">
-            <div class="left">=</div>
+            <div class="left">{{ (items|length, 999)|min }}</div>
             <input id="search" spellcheck="false" value="{{ q }}">
         </div>
         <div class="row">
