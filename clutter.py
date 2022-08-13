@@ -79,7 +79,7 @@ def link(item):
         if word.startswith('http'):
             part = f'<a href="{escape(word)}">{escape(word)}</a>'
         elif word.startswith('#'):
-            part = f'<a class="tag" href="/?q={quote(word)}">{escape(word)}</a>'
+            part = f'<span class="tag">{escape(word)}</span>'
         else:
             part = escape(word)
         parts.append(part)
