@@ -24,7 +24,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     if request.args.get('entry'):
-        header = datetime.datetime.now().strftime('#%Y-%m-%d@%H:%M:%S ')
+        header = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S ')
         write([header + request.args.get('entry')] + read())
     q = request.args.get('q') if request.args.get('q') else ''
     lines, items, sort, trim = read(), [], None, None
@@ -60,7 +60,7 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    header = datetime.datetime.now().strftime('#%Y-%m-%d@%H:%M:%S ')
+    header = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S ')
     write([header + request.data.decode('utf-8')] + read())
     return 'ok'
 
