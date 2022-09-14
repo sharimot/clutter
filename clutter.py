@@ -27,16 +27,13 @@ def index():
         header = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S ')
         write([header + request.args.get('entry')] + read())
     q = request.args.get('q') if request.args.get('q') else ''
-    lines, items, sort, trim = read(), [], None, None
+    lines, items, sort = read(), [], None
     n = len(lines)
     for i, line in enumerate(lines):
         line_ = line.lower()
         for phrase in q.split('  '):
             for word in phrase.split(' '):
                 if len(word) == 0:
-                    continue
-                if word[0] == 'T':
-                    trim = word
                     continue
                 if not sort and word[0] in ['A', 'D']:
                     sort = word
@@ -53,9 +50,6 @@ def index():
         else:
             key = lambda item: item[1]
         items = sorted(items, key=key, reverse=(sort[0] == 'D'))
-    if trim:
-        separator = trim[1:].replace('[space]', ' ') if len(trim) > 1 else ' #'
-        items = [(item[0], item[1].split(separator)[0]) for item in items]
     return render_template('index.html', items=items, q=q)
 
 @app.route('/add', methods=['POST'])
