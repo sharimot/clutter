@@ -26,30 +26,20 @@ def index():
     if request.args.get('entry'):
         header = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S ')
         write([header + request.args.get('entry')] + read())
-    q = request.args.get('q') if request.args.get('q') else ''
-    lines, items, sort = read(), [], None
-    n = len(lines)
+    lines, items, words = read(), [], []
+    q, n = request.args.get('q') if request.args.get('q') else '', len(lines)
+    for word in q.split():
+        prefix = word[0] if word[0] in {'A', 'D', 'N'} and len(word) > 1 else None
+        words.append((prefix, word[int(bool(prefix)):].replace('[space]', ' ').lower()))
     for i, line in enumerate(lines):
         line_ = line.lower()
-        for phrase in q.split('  '):
-            for word in phrase.split(' '):
-                if len(word) == 0:
-                    continue
-                if not sort and word[0] in ['A', 'D']:
-                    sort = word
-                prefixed = word[0] in ['N', 'A', 'D']
-                word_ = word[int(prefixed):].replace('[space]', ' ').lower()
-                if (word[0] == 'N') == (word_ in line_):
-                    break
-            else:
-                items.append((n - i, line))
-                break
-    if sort and '  ' not in q:
-        if len(sort) > 1:
-            key = lambda item: item[1].lower().split(sort[1:].lower(), 1)[1]
-        else:
-            key = lambda item: item[1]
-        items = sorted(items, key=key, reverse=(sort[0] == 'D'))
+        if all((word[0] != 'N') == (word[1] in line_) for word in words):
+            items.append((n - i, line))
+    sort = [word for word in words if word[0] in {'A', 'D'}]
+    if sort:
+        reverse, splitter = sort[0][0] == 'D', sort[0][1]
+        key = lambda item: item[1].lower().split(splitter, 1)[1]
+        items = sorted(items, key=key, reverse=reverse)
     return render_template('index.html', items=items, q=q)
 
 @app.route('/add', methods=['POST'])
