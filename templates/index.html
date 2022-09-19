@@ -45,8 +45,9 @@
             for (const row of document.getElementById('items').children) {
                 const edit = row.querySelector('div');
                 const pre = row.querySelector('pre');
-                const none =row.querySelector('div.none');
-                const input =row.querySelector('input');
+                const none = row.querySelector('div.none');
+                const input = row.querySelector('input');
+                const original = input.value;
                 edit.addEventListener('click', event => {
                     edit.style.display = 'none';
                     pre.style.display = 'none';
@@ -59,9 +60,13 @@
                 });
                 input.addEventListener('keypress', event => {
                     if (event.key !== 'Enter') { return; }
-                    const body = row.id + ' ' + input.value;
+                    const body = row.id + '\n' + original + '\n' + input.value;
                     fetch('/update', { method: 'POST', body: body })
-                    .then(response => { location.reload(); });
+                    .then(response => response.text())
+                    .then(text => {
+                        if (text === 'no') { alert('Error!'); }
+                        location.reload();
+                    });
                 });
             };
         </script>

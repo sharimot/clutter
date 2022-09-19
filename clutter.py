@@ -50,9 +50,12 @@ def add():
 
 @app.route('/update', methods=['POST'])
 def update():
-    item_id, content = request.data.decode('utf-8').split(' ', 1)
+    item_id, original, content = request.data.decode('utf-8').split('\n')
     items = read()
-    items[len(items) - int(item_id)] = content
+    index = len(items) - int(item_id)
+    if items[index] != original:
+        return 'no'
+    items[index] = content
     write(items)
     return 'ok'
 
