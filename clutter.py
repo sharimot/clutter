@@ -3,6 +3,7 @@ from html import escape
 from urllib.parse import quote
 import datetime
 import os
+import re
 
 assert 'CLUTTER' in os.environ
 assert os.path.exists(os.environ['CLUTTER'])
@@ -61,8 +62,9 @@ def update():
 
 @app.template_filter('link')
 def link(item):
+    line = item[1]
     parts = []
-    for word in item[1].split(' '):
+    for word in line.split(' '):
         if word.startswith('http'):
             part = f'<a href="{escape(word)}">{escape(word)}</a>'
         elif word.startswith('#'):
@@ -70,4 +72,7 @@ def link(item):
         else:
             part = escape(word)
         parts.append(part)
-    return ' '.join(parts)
+    line = ' '.join(parts)
+    if re.match(r'\d{14}', line):
+        line = f'{line[:4]}<a href="/?q={line[:8]}">{line[4:8]}</a>{line[8:]}'
+    return line
