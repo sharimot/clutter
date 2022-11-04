@@ -11,7 +11,7 @@
             <input id="search" spellcheck="false" value="{{ q }}">
         </div>
         <div class="row">
-            <div class="left">+</div>
+            <div class="left btn" id="plus">+</div>
             <input id="add" spellcheck="false">
         </div>
         <div id="items">{% for item in items[:1000] %}
@@ -41,6 +41,11 @@
                 if (event.key !== 'Enter') { return; }
                 fetch('/add', { method: 'POST', body: add.value })
                 .then(response => { location.reload(); });
+            });
+            const plus = document.getElementById('plus');
+            plus.addEventListener('click', event => {
+                add.value = search.value;
+                add.focus();
             });
             for (const row of document.getElementById('items').children) {
                 const edit = row.querySelector('div');
