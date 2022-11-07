@@ -22,9 +22,9 @@ input {
     background-color: transparent;
     border: none;
     color: var(--black);
+    flex: auto;
     height: 100%;
     padding: 0;
-    width: calc(100% - 32px);
 }
 
 input:focus {
