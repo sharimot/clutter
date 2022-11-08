@@ -41,7 +41,8 @@ def index():
         reverse, splitter = sort[0][0] == 'D', sort[0][1]
         key = lambda item: item[1].lower().split(splitter, 1)[1]
         items = sorted(items, key=key, reverse=reverse)
-    return render_template('index.html', items=items, q=q)
+    count = '&nbsp;' * (14 - len(str(len(items)))) + str(len(items)) + '&nbsp;'
+    return render_template('index.html', items=items, q=q, count=count)
 
 @app.route('/add', methods=['POST'])
 def add():
