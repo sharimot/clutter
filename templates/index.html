@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{ 'Clutter' if q == '' else q }}</title>
+        <title>{{ q or 'Clutter' }}</title>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="shortcut icon" type="image/png" href="/static/favicon.png"/>
     </head>
@@ -12,7 +12,7 @@
             <input id="search" spellcheck="false" value="{{ q }}">
         </div>
         <div class="row">
-            <div class="left btn" id="plus">+</div>
+            <div class="btn left" id="plus">+</div>
             <div id="now"></div>
             <script>
                 const format = number => number.toString().padStart(2, '0');
@@ -32,9 +32,10 @@
             </script>
             <input id="add" spellcheck="false">
         </div>
+        <div style="height: 1em;"></div>
         <div id="items">{% for item in items[:1000] %}
             <div class="row" id="{{ item[0] }}">
-                <div class="left btn">-</div>
+                <div class="btn left">-</div>
                 <pre>{{ item|link|safe }}</pre>
                 <div class="left none">*</div>
                 <input class="none" spellcheck="false" value="{{ item[1] }}">
@@ -52,6 +53,7 @@
             search.addEventListener('keypress', event => {
                 if (event.key !== 'Enter') { return; }
                 const q = encodeURIComponent(search.value);
+                search.value = '{{ q }}';
                 location.href = '/?q=' + q;
             });
             const add = document.getElementById('add');
@@ -79,7 +81,7 @@
                     input.focus();
                     const length = input.value.length;
                     input.setSelectionRange(length, length);
-                    row.style.background = 'whitesmoke';
+                    row.style.background = 'aliceblue';
                 });
                 input.addEventListener('keypress', event => {
                     if (event.key !== 'Enter') { return; }

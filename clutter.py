@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 from html import escape
-from urllib.parse import quote
 import datetime
 import os
 import re
@@ -63,16 +62,15 @@ def update():
 
 @app.template_filter('link')
 def link(item):
-    line = item[1]
     parts = []
-    for word in line.split(' '):
+    tag = {'#': 'hash', '$': 'dollar', '^': 'caret'}
+    for word in item[1].split(' '):
         if word.startswith('http'):
-            part = f'<a href="{escape(word)}">{escape(word)}</a>'
-        elif word.startswith('#'):
-            part = f'<span class="tag">{escape(word)}</span>'
+            parts.append(f'<a href="{escape(word)}">{escape(word)}</a>')
+        elif word and word[0] in tag:
+            parts.append(f'<span class="{tag[word[0]]}">{escape(word)}</span>')
         else:
-            part = escape(word)
-        parts.append(part)
+            parts.append(escape(word))
     line = ' '.join(parts)
     if re.match(r'\d{14}', line):
         line = f'{line[:4]}<a href="/?q={line[:8]}">{line[4:8]}</a>{line[8:]}'
