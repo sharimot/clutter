@@ -1,0 +1,19 @@
+<svg viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="rect">
+        <rect x="4" y="3.5" width="3" height="1" transform="rotate(60 7 4)" fill="dodgerblue"/>
+    </symbol>
+    <symbol id="circle">
+        <circle cx="7" cy="4" r="1" fill="dodgerblue"/>
+    </symbol>
+    <use href="#rect" transform="rotate(-30 4 4)"/>
+    <use href="#rect" transform="rotate(-90 4 4)"/>
+    <use href="#rect" transform="rotate(-150 4 4)"/>
+    <use href="#rect" transform="rotate(-210 4 4)"/>
+    <use href="#rect" transform="rotate(-270 4 4)"/>
+    <use href="#circle" transform="rotate(-30 4 4)"/>
+    <use href="#circle" transform="rotate(-90 4 4)"/>
+    <use href="#circle" transform="rotate(-150 4 4)"/>
+    <use href="#circle" transform="rotate(-210 4 4)"/>
+    <use href="#circle" transform="rotate(-270 4 4)"/>
+    <use href="#circle" transform="rotate(-330 4 4)"/>
+</svg>
