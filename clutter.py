@@ -12,14 +12,12 @@ path = os.environ['CLUTTER']
 
 def read():
     with open(path, 'r') as f:
-        lines = f.read().splitlines()
+        lines = f.read().split('\n')
     return lines, len(lines)
 
 def write(lines):
     with open(path, 'w') as f:
-        while lines[0] == '':
-            lines = lines[1:]
-        f.write('\n'.join(lines) + '\n')
+        f.write('\n'.join(lines))
 
 def parse(q):
     query = {'q': q, 'units': [], 'sort': None, 'swap': None}
