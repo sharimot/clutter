@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ data['title'] }}</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <link rel="shortcut icon" type="image/svg+xml" href="/static/favicon.svg"/>
+    </head>
+    <body>
+        <div class="row">
+            <div class="left">=</div>
+            <div>{{ data['count']|safe }}</div>
+            <input id="search" spellcheck="false" value="{{ data['q'] }}">
+        </div>
+        <div style="height: 1em;"></div>
+        <div class="row swap">
+            <div class="left"></div>
+            <div id="swap">{{ ('&nbsp;' * 5)|safe }}swap{{ ('&nbsp;' * 5)|safe }}</div>
+            <div id="message">&nbsp;{{ data['message']|safe }}</div>
+        </div>
+        <div style="height: 1em;"></div>
+        <div id="rows">{% for item in data['items'] %}
+            <div id="{{ item['id'] }}">
+                <div class="row">
+                    <div class="left">-</div>
+                    <pre class="original">{{ item['line'] }}</pre>
+                </div>
+                <div class="row">
+                    <div class="left">+</div>
+                    <pre class="revision">{{ item['revision'] }}</pre>
+                </div>
+                <div style="height: 1em;"></div>
+            </div>{% endfor %}
+        </div>
+        <script>
+            const search = document.getElementById('search');
+            search.addEventListener('keypress', event => {
+                if (event.key !== 'Enter') { return; }
+                const q = encodeURIComponent(search.value);
+                location.href = '/?q=' + q;
+            });
+            const items = [];
+            for (const row of document.getElementById('rows').children) {
+                items.push({
+                    id: row.id,
+                    line: row.children[0].children[1].innerText,
+                    revision: row.children[1].children[1].innerText
+                });
+            }
+            const swap = document.getElementById('swap');
+            swap.addEventListener('click', async event => {
+                if (!confirm('Are you sure?')) { return; }
+                const body = JSON.stringify(items);
+                const response = await fetch('/swap', { method: 'POST', body: body });
+                if (await response.text() === 'no') { alert('Error!'); }
+                location.href = '/';
+            });
+        </script>
+    </body>
+</html>

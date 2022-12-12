@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from html import escape
+from urllib.parse import quote
 import datetime
+import json
 import os
 import re
 
@@ -11,7 +13,7 @@ path = os.environ['CLUTTER']
 def read():
     with open(path, 'r') as f:
         lines = f.read().splitlines()
-    return lines
+    return lines, len(lines)
 
 def write(lines):
     with open(path, 'w') as f:
@@ -19,52 +21,101 @@ def write(lines):
             lines = lines[1:]
         f.write('\n'.join(lines) + '\n')
 
+def parse(q):
+    query = {'q': q, 'units': [], 'sort': None, 'swap': None}
+    for word in q.split():
+        head, tail = word[0], word[1:]
+        convert = lambda word: word.replace('[space]', ' ').lower()
+        if head == 'S' and len(word) >= 4 and word[1] == word[-1]:
+            chunks = word.split(word[1])
+            if len(chunks) != 4:
+                continue
+            source = chunks[1].replace('[space]', ' ')
+            target = chunks[2].replace('[space]', ' ')
+            query['swap'] = {'source': source, 'target': target}
+            query['units'].append({'match': True, 'word': source.lower()})
+        elif len(word) > 1 and head in {'A', 'D'}:
+            query['sort'] = {'reverse': head == 'D', 'by': convert(tail)}
+            query['units'].append({'match': True, 'word': convert(tail)})
+        elif len(word) > 1 and head == 'N':
+            query['units'].append({'match': False, 'word': convert(tail)})
+        else:
+            query['units'].append({'match': True, 'word': convert(word)})
+    return query
+
+def process(query):
+    (lines, n), data, items = read(), {}, []
+    units, sort, swap = query['units'], query['sort'], query['swap']
+    for i, line in enumerate(lines):
+        line_ = line.lower()
+        if all(unit['match'] == (unit['word'] in line_) for unit in units):
+            items.append({'id': n - i, 'line': line})
+    if sort:
+        key = lambda item: item['line'].lower().split(sort['by'], 1)[1]
+        items = sorted(items, key=key, reverse=sort['reverse'])
+    if swap:
+        check_case = lambda item: swap['source'] in item['line']
+        items = list(filter(check_case, items))
+        source, target = swap['source'], swap['target']
+        link = f'<a href="/?q={quote(target.lower())}">{escape(target)}</a>'
+        warning = f'{link} already exists!'
+        data['message'] = warning if target in '\n'.join(lines) else ''
+        for item in items:
+            item['revision'] = item['line'].replace(source, target)
+    count = '&nbsp;' * (14 - len(str(len(items)))) + str(len(items)) + '&nbsp;'
+    data['title'], data['q'] = query['q'] or 'Clutter', query['q']
+    data['items'], data['count'] = items, count
+    return data
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     if request.args.get('entry'):
         header = datetime.datetime.now().strftime('%Y%m%d%H%M%S ')
-        write([header + request.args.get('entry')] + read())
-    lines, items, words = read(), [], []
-    q, n = request.args.get('q') if request.args.get('q') else '', len(lines)
-    for word in q.split():
-        prefix = word[0] if word[0] in {'A', 'D', 'N'} and len(word) > 1 else None
-        words.append((prefix, word[int(bool(prefix)):].replace('[space]', ' ').lower()))
-    for i, line in enumerate(lines):
-        line_ = line.lower()
-        if all((word[0] != 'N') == (word[1] in line_) for word in words):
-            items.append((n - i, line))
-    sort = [word for word in words if word[0] in {'A', 'D'}]
-    if sort:
-        reverse, splitter = sort[0][0] == 'D', sort[0][1]
-        key = lambda item: item[1].lower().split(splitter, 1)[1]
-        items = sorted(items, key=key, reverse=reverse)
-    count = '&nbsp;' * (14 - len(str(len(items)))) + str(len(items)) + '&nbsp;'
-    return render_template('index.html', items=items, q=q, count=count)
+        write([header + request.args.get('entry')] + read()[0])
+    q = request.args.get('q') or ''
+    query = parse(q)
+    data = process(query)
+    if query['swap']:
+        return render_template('swap.html', data=data)
+    else:
+        return render_template('index.html', data=data)
 
 @app.route('/add', methods=['POST'])
 def add():
     header = datetime.datetime.now().strftime('%Y%m%d%H%M%S ')
-    write([header + request.data.decode('utf-8')] + read())
+    write([header + request.data.decode('utf-8')] + read()[0])
     return 'ok'
 
-@app.route('/update', methods=['POST'])
-def update():
-    item_id, original, content = request.data.decode('utf-8').split('\n')
-    items = read()
-    index = len(items) - int(item_id)
-    if items[index] != original:
+@app.route('/edit', methods=['POST'])
+def edit():
+    item = json.loads(request.data.decode('utf-8'))
+    lines, n = read()
+    index = n - int(item['id'])
+    if lines[index] != item['line']:
         return 'no'
-    items[index] = content
-    write(items)
+    lines[index] = item['revision']
+    write(lines)
+    return 'ok'
+
+@app.route('/swap', methods=['POST'])
+def swap():
+    items = json.loads(request.data.decode('utf-8'))
+    lines, n = read()
+    for item in items:
+        index = n - int(item['id'])
+        if lines[index] != item['line']:
+            return 'no'
+        lines[index] = item['revision']
+        write(lines)
     return 'ok'
 
 @app.template_filter('link')
-def link(item):
+def link(line):
     parts = []
     tag = {'#': 'hash', '$': 'dollar', '^': 'caret'}
-    for word in item[1].split(' '):
+    for word in line.split(' '):
         if word.startswith('http'):
             parts.append(f'<a href="{escape(word)}">{escape(word)}</a>')
         elif word and word[0] in tag:

@@ -34,6 +34,17 @@ pre {
     width: calc(100% - 32px);
 }
 
+#message {
+    color: red;
+}
+
+#swap {
+    color: dodgerblue;
+    cursor: pointer;
+    background: aliceblue;
+    border-radius: 4px;
+}
+
 .btn {
     cursor: pointer;
 }
@@ -60,12 +71,20 @@ pre {
     display: none;
 }
 
+.original {
+    color: orange;
+}
+
+.revision {
+    color: dodgerblue;
+}
+
 .row {
     border-radius: 6px;
     display: flex;
     line-height: 1.25em;
 }
 
-.row:hover {
+.row:not(.swap):hover {
     background-color: aliceblue;
 }

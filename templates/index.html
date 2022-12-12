@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{ q or 'Clutter' }}</title>
+        <title>{{ data['title'] }}</title>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="shortcut icon" type="image/svg+xml" href="/static/favicon.svg"/>
     </head>
     <body>
         <div class="row">
             <div class="left">=</div>
-            <div>{{ count|safe }}</div>
-            <input id="search" spellcheck="false" value="{{ q }}">
+            <div>{{ data['count']|safe }}</div>
+            <input id="search" spellcheck="false" value="{{ data['q'] }}">
         </div>
         <div class="row">
             <div class="btn left" id="plus">+</div>
@@ -33,14 +33,14 @@
             <input id="add" spellcheck="false">
         </div>
         <div style="height: 1em;"></div>
-        <div id="items">{% for item in items[:1000] %}
-            <div class="row" id="{{ item[0] }}">
+        <div id="rows">{% for item in data['items'][:1000] %}
+            <div class="row" id="{{ item['id'] }}">
                 <div class="btn left">-</div>
-                <pre>{{ item|link|safe }}</pre>
+                <pre>{{ item['line']|link|safe }}</pre>
                 <div class="left none">*</div>
-                <input class="none" spellcheck="false" value="{{ item[1] }}">
+                <input class="none" spellcheck="false" value="{{ item['line'] }}">
             </div>{% endfor %}
-        </div>{% if items|length > 1000 %}
+        </div>{% if data['items']|length > 1000 %}
         <div class="row">
             <div class="left">:</div>
             <pre>OVERFLOW</pre>
@@ -53,26 +53,25 @@
             search.addEventListener('keypress', event => {
                 if (event.key !== 'Enter') { return; }
                 const q = encodeURIComponent(search.value);
-                search.value = '{{ q }}';
                 location.href = '/?q=' + q;
             });
             const add = document.getElementById('add');
-            add.addEventListener('keypress', event => {
+            add.addEventListener('keypress', async event => {
                 if (event.key !== 'Enter') { return; }
-                fetch('/add', { method: 'POST', body: add.value })
-                .then(response => { location.reload(); });
+                await fetch('/add', { method: 'POST', body: add.value });
+                location.reload();
             });
             const plus = document.getElementById('plus');
             plus.addEventListener('click', event => {
                 add.value = search.value;
                 add.focus();
             });
-            for (const row of document.getElementById('items').children) {
+            for (const row of document.getElementById('rows').children) {
                 const edit = row.querySelector('div');
                 const pre = row.querySelector('pre');
                 const none = row.querySelector('div.none');
                 const input = row.querySelector('input');
-                const original = input.value;
+                const line = input.value;
                 edit.addEventListener('click', event => {
                     edit.style.display = 'none';
                     pre.style.display = 'none';
@@ -83,15 +82,13 @@
                     input.setSelectionRange(length, length);
                     row.style.background = 'aliceblue';
                 });
-                input.addEventListener('keypress', event => {
+                input.addEventListener('keypress', async event => {
                     if (event.key !== 'Enter') { return; }
-                    const body = row.id + '\n' + original + '\n' + input.value;
-                    fetch('/update', { method: 'POST', body: body })
-                    .then(response => response.text())
-                    .then(text => {
-                        if (text === 'no') { alert('Error!'); }
-                        location.reload();
-                    });
+                    const item = { id: row.id, line: line, revision: input.value };
+                    const body = JSON.stringify(item);
+                    const response = await fetch('/edit', { method: 'POST', body: body });
+                    if (await response.text() === 'no') { alert('Error!'); }
+                    location.reload();
                 });
             };
         </script>
