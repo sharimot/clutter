@@ -46,8 +46,8 @@
             <pre>OVERFLOW</pre>
         </div>{% endif %}
         <script>
-            if (new URLSearchParams(location.search).get('entry')) {
-                history.replaceState({}, '', location.href.split('?')[0]);
+            if (new URLSearchParams(location.search).get('add')) {
+                history.replaceState({}, '', '/');
             }
             if (performance.getEntriesByType('navigation')[0].type === 'back_forward') {
                 location.reload();

@@ -19,6 +19,10 @@ def write(lines):
     with open(path, 'w') as f:
         f.write('\n'.join(lines))
 
+def push(content):
+    header = datetime.datetime.now().strftime('%Y%m%d%H%M%S ')
+    write([header + content] + read()[0])
+
 def parse(q):
     query = {'q': q, 'units': [], 'sort': None, 'swap': None}
     for word in q.split():
@@ -69,9 +73,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    if request.args.get('entry'):
-        header = datetime.datetime.now().strftime('%Y%m%d%H%M%S ')
-        write([header + request.args.get('entry')] + read()[0])
+    request.args.get('add') and push(request.args.get('add'))
     q = request.args.get('q') or ''
     query = parse(q)
     data = process(query)
@@ -82,8 +84,7 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    header = datetime.datetime.now().strftime('%Y%m%d%H%M%S ')
-    write([header + request.data.decode('utf-8')] + read()[0])
+    push(request.data.decode('utf-8'))
     return 'ok'
 
 @app.route('/edit', methods=['POST'])
