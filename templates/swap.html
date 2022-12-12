@@ -32,6 +32,9 @@
             </div>{% endfor %}
         </div>
         <script>
+            if (performance.getEntriesByType('navigation')[0].type === 'back_forward') {
+                location.reload();
+            }
             const search = document.getElementById('search');
             search.addEventListener('keypress', event => {
                 if (event.key !== 'Enter') { return; }
