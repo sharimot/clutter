@@ -3,12 +3,13 @@ from html import escape
 from urllib.parse import quote
 import datetime
 import json
+import logging
 import os
 import re
+import sys
 
-assert 'CLUTTER' in os.environ
-assert os.path.exists(os.environ['CLUTTER'])
-path = os.environ['CLUTTER']
+logging.getLogger('werkzeug').disabled = True
+path = None
 
 def read():
     with open(path, 'r') as f:
@@ -60,7 +61,7 @@ def process(query):
         items = list(filter(check_case, items))
         source, target = swap['source'], swap['target']
         link = f'<a href="/?q={quote(target.lower())}">{escape(target)}</a>'
-        warning = f'{link} already exists!'
+        warning = f'"{link}" already exists!'
         data['message'] = warning if target in '\n'.join(lines) else ''
         for item in items:
             item['revision'] = item['line'].replace(source, target)
@@ -125,3 +126,14 @@ def link(line):
     if re.match(r'\d{14}', line):
         line = f'{line[:4]}<a href="/?q={line[:8]}">{line[4:8]}</a>{line[8:]}'
     return line
+
+if __name__ == '__main__':
+    argv = sys.argv
+    if len(argv) < 2:
+        print('Path required.')
+        sys.exit()
+    path = argv[1]
+    port = '12224'
+    if len(argv) > 2:
+        port = argv[2]
+    app.run(port=port)
