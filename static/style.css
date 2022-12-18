@@ -88,3 +88,7 @@ pre {
 .row:not(.swap):hover {
     background-color: aliceblue;
 }
+
+.stuff {
+    height: 1em;
+}
