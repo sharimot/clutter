@@ -23,15 +23,15 @@ input {
     padding: 0;
 }
 
-input:focus {
-    outline: none;
-}
-
 pre {
     margin: 0;
     overflow-wrap: break-word;
     white-space: pre-wrap;
     width: calc(100% - 32px);
+}
+
+:focus {
+    outline: none;
 }
 
 #message {
