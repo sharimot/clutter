@@ -202,11 +202,11 @@ If you have a large number of tags, you can use tag nesting to help you stay org
 
 For example, you could create a new sub-tag by adding an item like
 
-`#tag #parent #child #sub`
+`#tag #parent #child $sub`
 
 or
 
-`#tag #grandparent #parent #child #sub`
+`#tag #grandparent #parent #child $sub`
 
 To view the list of tags, you can search for [`A#tag`](http://localhost:12224/?q=A%23tag).
 This will show you the hierarchy of your tags and help you keep track of your organizational structure.
@@ -321,7 +321,8 @@ Simply add the following script to Tampermonkey and customize the keybindings to
         if (event.target.matches('input')) { return; }
         if (event.target.matches('textarea')) { return; }
         if (event.target.closest('[contenteditable]')) { return; }
-        const url = `http://localhost:12224/?q=${encodeURIComponent(window.location.href)}`;
+        const href = decodeURIComponent(window.location.href);
+        const url = `http://localhost:12224/?q=${encodeURIComponent(href)}`;
         if (event.key === '<your-favorite-letter-1>') {
             window.location.href= url;
         }
