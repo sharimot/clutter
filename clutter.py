@@ -133,7 +133,5 @@ if __name__ == '__main__':
         print('Path required.')
         sys.exit()
     path = argv[1]
-    port = '12224'
-    if len(argv) > 2:
-        port = argv[2]
+    port = argv[2] if len(argv) > 2 else '12224'
     app.run(port=port)
