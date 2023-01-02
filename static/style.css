@@ -9,6 +9,11 @@ a {
     text-decoration: none;
 }
 
+a:focus {
+    color: blue;
+    font-weight: bold;
+}
+
 body {
     margin: 0;
     padding: 2em calc(50vw - 40em) 100vh;
