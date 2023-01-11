@@ -267,7 +267,7 @@ However, you can view old items by appending the year (`yyyy`) or month (`yyyymm
 
 ### Home page
 
-Pages like [`#tag D^`](http://localhost:12224/?q=%23tag+D^) and [`$todo D^`](http://localhost:12224/?q=%24todo%20D^) might be useful.
+Pages like [`#tag D^`](http://localhost:12224/?q=%23tag+D^), [`$todo`](http://localhost:12224/?q=%24todo), and [`A$todo:`](http://localhost:12224/?q=A%24todo:) might be useful.
 
 ### Date search
 
