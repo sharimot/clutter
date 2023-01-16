@@ -1,5 +1,9 @@
 # Clutter: The Minimalist Notebook
 
+Clutter is a minimalist note-taking and task management tool that relies on a single text file called clutter.txt.
+Clutter selects and displays lines from clutter.txt based on your query.
+While this may sound simple, it's an incredibly powerful idea that could potentially transform how we organize and access information.
+
 ## Use cases
 
 - Notebook
@@ -11,6 +15,24 @@
 
 ## Get started
 
+### Web version (demo)
+
+Please visit <https://sharimot.github.io/clutter/>.
+
+Using the demo version forever is not recommended for the following reasons:
+
+- It could get hacked and could leak your private information.
+- There is a restriction on the size of the data storage.
+- Syncing and backing up your data might not be easy.
+
+So please use it to understand what it feels like to use Clutter.
+
+In the web version, clutter.txt refers to the contents of your data that is stored in the browser.
+To get clutter.txt, click on the `[get]` button.
+To set clutter.txt, click on the `[set]` button.
+
+### CLI version (main)
+
 Before you begin, make sure you have python3 and pip installed on your system.
 
 Clutter uses a plain text file called clutter.txt as its database file.
@@ -20,25 +42,25 @@ To install and run Clutter, follow these steps:
 
 1. Clone the repository from GitHub:
 
-```
+```bash
 git clone https://github.com/sharimot/clutter
 ```
 
 2. Change into the project directory:
 
-```
+```bash
 cd clutter
 ```
 
 3. Install the required dependencies:
 
-```
+```bash
 python3 -m pip install -r requirements.txt
 ```
 
 4. Run Clutter, specifying the path to clutter.txt:
 
-```
+```bash
 python3 clutter.py /path/to/clutter.txt
 ```
 
@@ -55,7 +77,7 @@ Because:
 
 If you prefer, you can specify a different port number (e.g., 9999) when running Clutter:
 
-```
+```bash
 python3 clutter.py /path/to/clutter.txt 9999
 ```
 
