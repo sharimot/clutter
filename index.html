@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+        <link rel="stylesheet" href="static/style.css">
+        <link rel="shortcut icon" type="image/svg+xml" href="static/favicon.svg"/>
+    </head>
+    <body>
+        <div class="row">
+            <div class="left">=</div>
+            <div id="count"></div>
+            <input id="search" spellcheck="false">
+        </div>
+        <div class="none row" id="new">
+            <div class="btn left" id="plus">+</div>
+            <div id="now"></div>
+            <script src="static/clock.js"></script>
+            <input id="add" spellcheck="false">
+        </div>
+        <div class="none stuff" id="gap"></div>
+        <div class="row swap">
+            <div class="left"></div>
+            <div id="swap"></div>
+            <div id="message"></div>
+        </div>
+        <div class="none row" id="getset">
+            <div class="left"></div>
+            <div><span class="btn" id="get">[get]</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn" id="set">[set]</span></div>
+        </div>
+        <div class="none stuff" id="space"></div>
+        <div class="none" id="indexRows"></div>
+        <div class="none" id="swapRows"></div>
+        <div class="none row" id="overflow">
+            <div class="left">:</div>
+            <pre>OVERFLOW</pre>
+        </div>
+        <script src="clutter.js"></script>
+    </body>
+</html>

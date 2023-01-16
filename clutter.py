@@ -60,7 +60,8 @@ def process(query):
         check_case = lambda item: swap['source'] in item['line']
         items = list(filter(check_case, items))
         source, target = swap['source'], swap['target']
-        link = f'<a href="/?q={quote(target.lower())}">{escape(target)}</a>'
+        q = quote(target.lower().replace(' ', '[space]'))
+        link = f'<a href="/?q={q}">{escape(target)}</a>'
         warning = f'"{link}" already exists!'
         data['message'] = warning if target in '\n'.join(lines) else ''
         for item in items:

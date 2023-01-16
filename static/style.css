@@ -72,10 +72,6 @@ pre {
     width: 32px;
 }
 
-.none {
-    display: none;
-}
-
 .original {
     color: orange;
 }
@@ -96,4 +92,8 @@ pre {
 
 .stuff {
     height: 1em;
+}
+
+.none {
+    display: none;
 }
