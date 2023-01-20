@@ -23,3 +23,6 @@ swap.addEventListener('click', async event => {
     if (await response.text() === 'no') { alert('Error!'); }
     location.href = '/';
 });
+document.querySelectorAll('.left').forEach(element => {
+    element.style.visibility = 'visible';
+});

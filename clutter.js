@@ -255,9 +255,6 @@ const onIndex = data => {
     for (const item of data.items.slice(0, 1000)) {
         createIndex(item);
     }
-    document.querySelectorAll('.left').forEach(element => {
-        element.style.visibility = 'visible';
-    });
     if (data.items.length > 1000) {
         document.getElementById('overflow').style.display = 'flex';
     }
@@ -290,6 +287,9 @@ const main = () => {
     else {
         onIndex(data);
     }
+    document.querySelectorAll('.left').forEach(element => {
+        element.style.visibility = 'visible';
+    });
 };
 
 const postEdit = item => {
