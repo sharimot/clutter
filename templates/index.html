@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+        <meta charset="utf-8">
         <title>{{ data['title'] }}</title>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="shortcut icon" type="image/svg+xml" href="/static/favicon.svg"/>
@@ -21,7 +22,7 @@
         <div class="stuff"></div>
         <div id="rows">{% for item in data['items'][:1000] %}
             <div class="row" id="{{ item['id'] }}">
-                <div class="btn left">-</div>
+                <div class="btn left">{{ item['left']|safe }}</div>
                 <pre>{{ item['line']|link|safe }}</pre>
                 <div class="left none">*</div>
                 <input class="none" spellcheck="false" value="{{ item['line'] }}">

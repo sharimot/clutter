@@ -27,6 +27,9 @@ for (const row of document.getElementById('rows').children) {
     const none = row.querySelector('div.none');
     const input = row.querySelector('input');
     const line = input.value;
+    if (['┼', '┬'].includes(edit.textContent)) {
+        edit.innerHTML += `<br>│`.repeat(pre.offsetHeight / 15 - 1);
+    }
     edit.addEventListener('click', event => {
         edit.style.display = 'none';
         pre.style.display = 'none';
@@ -46,3 +49,6 @@ for (const row of document.getElementById('rows').children) {
         location.reload();
     });
 };
+document.querySelectorAll('.left').forEach(element => {
+    element.style.visibility = 'visible';
+});

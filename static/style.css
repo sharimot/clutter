@@ -69,6 +69,7 @@ pre {
 .left {
     text-align: center;
     user-select: none;
+    visibility: hidden;
     width: 32px;
 }
 

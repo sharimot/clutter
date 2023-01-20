@@ -50,6 +50,8 @@ def process(query):
     (lines, n), data, items = read(), {}, []
     units, sort, swap = query['units'], query['sort'], query['swap']
     for i, line in enumerate(lines):
+        if line == '':
+            continue
         line_ = line.lower()
         if all(unit['match'] == (unit['word'] in line_) for unit in units):
             items.append({'id': n - i, 'line': line})
@@ -66,6 +68,11 @@ def process(query):
         data['message'] = warning if target in '\n'.join(lines) else ''
         for item in items:
             item['revision'] = item['line'].replace(source, target)
+    date = lambda k: items[k]['line'][:8]
+    for i in range(len(items)):
+        begin = (i == 0 or items[i - 1]['left'] in {'┴', '─'})
+        close = (i == len(items) - 1 or date(i + 1) != date(i))
+        items[i]['left'] = [['┼', '┴'], ['┬', '─']][begin][close]
     count = '&nbsp;' * (14 - len(str(len(items)))) + str(len(items)) + '&nbsp;'
     data['title'], data['q'] = query['q'] or 'Clutter', query['q']
     data['items'], data['count'] = items, count

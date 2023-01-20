@@ -69,6 +69,9 @@ const process = query => {
     let items = [];
     const { units, sort, swap } = query;
     for (const [i, line] of lines.entries()) {
+        if (line === '') {
+            continue
+        }
         const line_ = line.toLowerCase();
         if (units.every(unit => unit.match === line_.includes(unit.word))) {
             items.push({ id: n - i, line: line });
@@ -101,6 +104,12 @@ const process = query => {
         for (const item of items) {
             item.revision = item.line.replaceAll(source, target);
         }
+    }
+    const date = k => items[k].line.slice(0, 8);
+    for (let i = 0; i < items.length; i++) {
+        const begin = +(i === 0 || ['┴', '─'].includes(items[i - 1].left));
+        const close = +(i == items.length - 1 || date(i + 1) !== date(i));
+        items[i].left = [['┼', '┴'], ['┬', '─']][begin][close];
     }
     const length = items.length.toString();
     const count = '&nbsp;'.repeat(14 - length.length) + length + '&nbsp;';
@@ -167,7 +176,7 @@ const createIndex = item => {
     document.getElementById('indexRows').appendChild(row);
     const edit = document.createElement('div');
     edit.className = 'btn left';
-    edit.innerText = '-';
+    edit.innerText = item.left;
     row.appendChild(edit);
     const pre = document.createElement('pre');
     pre.innerHTML = link(item.line);
@@ -181,6 +190,9 @@ const createIndex = item => {
     input.spellcheck = false;
     input.value = item.line;
     row.appendChild(input);
+    if (['┼', '┬'].includes(edit.textContent)) {
+        edit.innerHTML += `<br>│`.repeat(pre.offsetHeight / 15 - 1);
+    }
     edit.addEventListener('click', event => {
         edit.style.display = 'none';
         pre.style.display = 'none';
@@ -243,6 +255,9 @@ const onIndex = data => {
     for (const item of data.items.slice(0, 1000)) {
         createIndex(item);
     }
+    document.querySelectorAll('.left').forEach(element => {
+        element.style.visibility = 'visible';
+    });
     if (data.items.length > 1000) {
         document.getElementById('overflow').style.display = 'flex';
     }
