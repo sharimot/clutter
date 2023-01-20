@@ -39,10 +39,6 @@ pre {
     outline: none;
 }
 
-#message {
-    color: red;
-}
-
 #swap {
     color: dodgerblue;
     cursor: pointer;
@@ -55,18 +51,19 @@ pre {
 }
 
 .caret {
-    color: red;
+    color: cadetblue;
 }
 
 .dollar {
-    color: violet;
+    color: deepskyblue;
 }
 
 .hash {
-    color: orange;
+    color: skyblue;
 }
 
 .left {
+    color: lightsteelblue;
     text-align: center;
     user-select: none;
     visibility: hidden;
@@ -74,7 +71,7 @@ pre {
 }
 
 .original {
-    color: orange;
+    color: skyblue;
 }
 
 .revision {
@@ -93,6 +90,10 @@ pre {
 
 .stuff {
     height: 1em;
+}
+
+.timestamp {
+    color: lightblue;
 }
 
 .none {

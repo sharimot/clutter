@@ -332,8 +332,11 @@ const link = line => {
     }
     line = parts.join(' ');
     if (line.match(/\d{14}/)) {
+        const year = `<span class="timestamp">${line.slice(0, 4)}</span>`;
         const a = `<a href="?q=${line.slice(0, 8)}">${line.slice(4, 8)}</a>`;
-        line = `${line.slice(0, 4)}${a}${line.slice(8)}`;
+        const moment = `<span class="timestamp">${line.slice(8, 14)}</span>`;
+        const body = line.slice(14);
+        line = `${year}${a}${moment}${body}`;
     }
     return line;
 };
