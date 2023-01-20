@@ -278,7 +278,7 @@ const main = () => {
     search.value = data.q;
     search.addEventListener('keypress', event => {
         if (event.key !== 'Enter') { return; }
-        const q = encodeURIComponent(search.value);
+        const q = encodeURIComponent(search.value).replaceAll('%20', '+');
         location.href = '?q=' + q;
     });
     if (query.swap) {
