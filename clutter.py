@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import sys
 
 logging.getLogger('werkzeug').disabled = True
@@ -117,6 +118,15 @@ def swap():
             return 'no'
         lines[index] = item['revision']
         write(lines)
+    return 'ok'
+
+@app.route('/backup', methods=['POST'])
+def backup():
+    snapshots = os.path.join(os.path.dirname(path), 'snapshots')
+    if not os.path.exists(snapshots):
+        os.mkdir(snapshots)
+    name = datetime.datetime.now().strftime('%Y%m%d%H%M%S.txt')
+    shutil.copyfile(path, os.path.join(snapshots, name))
     return 'ok'
 
 @app.template_filter('link')

@@ -4,6 +4,11 @@ if (new URLSearchParams(location.search).get('add')) {
 if (performance.getEntriesByType('navigation')[0].type === 'back_forward') {
     location.reload();
 }
+const equal = document.getElementById('equal');
+equal.addEventListener('click', async event => {
+    await fetch('/backup', { method: 'POST' });
+    alert('Backup successful!');
+});
 const search = document.getElementById('search');
 search.addEventListener('keypress', event => {
     if (event.key !== 'Enter') { return; }
