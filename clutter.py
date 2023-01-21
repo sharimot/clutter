@@ -71,6 +71,9 @@ def process(query):
             item['revision'] = item['line'].replace(source, target)
     date = lambda k: items[k]['line'][:8]
     for i in range(len(items)):
+        if sort:
+            items[i]['left'] = '─'
+            continue
         begin = (i == 0 or items[i - 1]['left'] in {'┴', '─'})
         close = (i == len(items) - 1 or date(i + 1) != date(i))
         items[i]['left'] = [['┼', '┴'], ['┬', '─']][begin][close]

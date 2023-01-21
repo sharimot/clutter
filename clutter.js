@@ -107,6 +107,10 @@ const process = query => {
     }
     const date = k => items[k].line.slice(0, 8);
     for (let i = 0; i < items.length; i++) {
+        if (sort) {
+            items[i].left = '─';
+            continue;
+        }
         const begin = +(i === 0 || ['┴', '─'].includes(items[i - 1].left));
         const close = +(i == items.length - 1 || date(i + 1) !== date(i));
         items[i].left = [['┼', '┴'], ['┬', '─']][begin][close];

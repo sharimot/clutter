@@ -22,7 +22,7 @@
         <div class="stuff"></div>
         <div id="rows">{% for item in data['items'][:1000] %}
             <div class="row" id="{{ item['id'] }}">
-                <div class="btn left">{{ item['left']|safe }}</div>
+                <div class="btn left">{{ item['left'] }}</div>
                 <pre>{{ item['line']|link|safe }}</pre>
                 <div class="left none">*</div>
                 <input class="none" spellcheck="false" value="{{ item['line'] }}">
