@@ -1,3 +1,5 @@
+*Do you want to leave this page and waste the rest of your life, or do you want to read it and become an extremely productive person today?*
+
 # Clutter: The Minimalist Notebook
 
 Clutter is a minimalist note-taking and task management tool that relies on a single text file called clutter.txt.
@@ -104,7 +106,7 @@ To edit an item, follow these steps:
 
 ### Find
 
-To search for items, use the invisible input field at the top row, which is indicated by an equal sign.
+To search for items, use the invisible input field in the top row, which is indicated by an equal sign.
 When you search for a specific string (e.g., `hello`), only the items that contain the string (case-insensitive) will be shown.
 The letter case is ignored, which means that searching with `hello` will return the same result as searching with `hElLo`.
 
@@ -237,9 +239,9 @@ By using tag nesting, you can easily manage a large number of tags and keep your
 
 ### Timestamping
 
-To easily copy and paste the current date and time (in the format yyyymmddHHMMSS), you can use automation tools like Karabiner.
+To easily copy and paste the current date and time (in the format yyyymmddHHMMSS), you can use automation tools like Karabiner-Elements, AutoHotKey, and AutoKey.
 
-You can achieve this by adding the following object into `profiles.complex_modifications.rules` of karabiner.json:
+If you are a Mac user, you can achieve this by adding the following object into `profiles.complex_modifications.rules` of karabiner.json:
 
 ```json
 {
@@ -256,7 +258,7 @@ You can achieve this by adding the following object into `profiles.complex_modif
             },
             "to": [
                 {
-                    "shell_command": "date +'%Y%m%d%H%M%S' | tr -d '¥n' | pbcopy"
+                    "shell_command": "date +'%Y%m%d%H%M%S' | tr -d '\n' | pbcopy"
                 }
             ],
             "type": "basic"
@@ -302,6 +304,9 @@ When it comes to organizing computer files, there are many different approaches 
 One method that can be effective is to name files using the format yyyymmddHHMMSS.extension and place them all in a single folder.
 Once you have renamed a file, you can use Clutter to associate the file name with its description and category.
 
+You can also apply the same principle to organize physical files.
+By labeling a file with the format yyyymmddHHMMSS, taking a picture of it, sorting files by the timestamp, and then using Clutter to store this information, you will be able to easily locate the files you need later on.
+
 ### Multi-line texts
 
 Clutter is not designed for writing multi-line texts.
@@ -315,7 +320,9 @@ Using `$trash` is an alternative way to logically remove an item.
 
 ### Backup
 
-You can back up clutter.txt by duplicating the file and renaming it as yyyymmddHHMMS.txt.
+You can back up clutter.txt by clicking on the equal sign in the top row.
+The snapshot is stored in the `snapshots` folder as yyyymmddHHMMSS.txt.
+(This feature is only available in the CLI version.)
 
 ### File synchronization
 
@@ -343,8 +350,8 @@ Simply add the following script to Tampermonkey and customize the keybindings to
         if (event.target.matches('input')) { return; }
         if (event.target.matches('textarea')) { return; }
         if (event.target.closest('[contenteditable]')) { return; }
-        const href = decodeURIComponent(window.location.href);
-        const url = `http://localhost:12224/?q=${encodeURIComponent(href)}`;
+        const q = encodeURIComponent(location.href);
+        const url = `http://localhost:12224/?q=${q}`;
         if (event.key === '<your-favorite-letter-1>') {
             window.location.href= url;
         }
@@ -358,3 +365,9 @@ Simply add the following script to Tampermonkey and customize the keybindings to
 With this script, you can press `<your-favorite-letter-1>` to open `http://localhost:12224/?q=<url>` in the same tab, or press `<your-favorite-letter-2>` to open `http://localhost:12224/?q=<url>` in a new tab.
 
 You can press the plus button at the second row to automatically fill the input field with the text present in the above row.
+
+### Time blocking
+
+When you begin working on a new task, you can create an item like `#doit <task-name>`.
+Once you have completed the task, you can create another item like `#done <task-name>`.
+This can help clarify the context in which the item was added.
