@@ -3,15 +3,23 @@ import sys
 with open(sys.argv[1], 'r') as f:
     lines = f.read().splitlines()
 
-taglines = [line for line in lines if '#tag' in line]
+declared_tags = set()
 
-tags = set()
+for line in lines:
+    if '#tag' not in line:
+        continue
+    for word in line.split():
+        if word.startswith('#'):
+            declared_tags.add(word)
+
+undeclared_tags = set()
 
 for line in lines:
     for word in line.split():
-        if word.startswith('#'):
-            if not any(word in tagline.split() for tagline in taglines):
-                tags.add(word)
+        if not word.startswith('#'):
+            continue
+        if word not in declared_tags:
+            undeclared_tags.add(word)
 
-for tag in sorted(list(tags)):
-    print(tag)
+for undeclared_tag in sorted(list(undeclared_tags)):
+    print(undeclared_tag)
