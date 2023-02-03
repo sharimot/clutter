@@ -1,5 +1,3 @@
-*Do you want to leave this page and waste the rest of your life, or do you want to read it and become an extremely productive person today?*
-
 # Clutter: The Minimalist Notebook
 
 Clutter is a minimalist note-taking and task management tool that relies on a single text file called clutter.txt.
@@ -205,7 +203,7 @@ However, you should avoid having too many items associated with a single tag.
 This can make it difficult to manage your items and make it harder to find what you are looking for.
 Instead, try to use a variety of tags to help you stay organized.
 
-Every time you create a new tag, you should add an item like `#tag #newtagname`.
+Every time you create a new tag, you should add an item like `#tag #newtagname #_`.
 This allows you to easily search for all tag names by searching with `#tag`.
 
 ### Naming tags
@@ -226,11 +224,11 @@ If you have a large number of tags, you can use tag nesting to help you stay org
 
 For example, you could create a new sub-tag by adding an item like
 
-`#tag #parent #child $sub`
+`#tag #parent #child`
 
 or
 
-`#tag #grandparent #parent #child $sub`
+`#tag #grandparent #parent #child`
 
 To view the list of tags, you can search for [`A#tag`](http://localhost:12224/?q=A%23tag).
 This will show you the hierarchy of your tags and help you keep track of your organizational structure.
@@ -291,7 +289,7 @@ However, you can view old items by appending the year (`yyyy`) or month (`yyyymm
 
 ### Home page
 
-Pages like [`#tag D^`](http://localhost:12224/?q=%23tag+D^), [`$todo`](http://localhost:12224/?q=%24todo), and [`A$todo:`](http://localhost:12224/?q=A%24todo:) might be useful.
+Pages like [`#tag D^`](http://localhost:12224/?q=%23tag+D^) and [`A$todo:`](http://localhost:12224/?q=A%24todo:) might be useful.
 
 ### Date search
 
@@ -350,7 +348,7 @@ Simply add the following script to Tampermonkey and customize the keybindings to
         if (event.target.matches('input')) { return; }
         if (event.target.matches('textarea')) { return; }
         if (event.target.closest('[contenteditable]')) { return; }
-        const q = encodeURIComponent(location.href);
+        const q = encodeURIComponent(location.href.split('#')[0]);
         const url = `http://localhost:12224/?q=${q}`;
         if (event.key === '<your-favorite-letter-1>') {
             window.location.href= url;
