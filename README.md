@@ -319,7 +319,7 @@ Using `$trash` is an alternative way to logically remove an item.
 ### Backup
 
 You can back up clutter.txt by clicking on the equal sign in the top row.
-The snapshot is stored in the `snapshots` folder as yyyymmddHHMMSS.txt.
+The snapshot is stored in the `snapshots` folder as yyyymmddHHMMSS.clutter.txt.
 (This feature is only available in the CLI version.)
 
 ### File synchronization

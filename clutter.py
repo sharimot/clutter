@@ -128,7 +128,7 @@ def backup():
     snapshots = os.path.join(os.path.dirname(path), 'snapshots')
     if not os.path.exists(snapshots):
         os.mkdir(snapshots)
-    name = datetime.datetime.now().strftime('%Y%m%d%H%M%S.txt')
+    name = datetime.datetime.now().strftime('%Y%m%d%H%M%S.clutter.txt')
     shutil.copyfile(path, os.path.join(snapshots, name))
     return 'ok'
 

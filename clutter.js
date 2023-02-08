@@ -219,7 +219,7 @@ const download = event => {
     const element = document.createElement('a');
     const data = encodeURIComponent(localStorage.clutter);
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + data);
-    element.setAttribute('download', header().trim() + '.txt');
+    element.setAttribute('download', header().trim() + '.clutter.txt');
     element.click();
 };
 
