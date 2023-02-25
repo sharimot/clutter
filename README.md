@@ -299,7 +299,7 @@ You can click on the date to see what happened on that day.
 ### File management
 
 When it comes to organizing computer files, there are many different approaches to consider.
-One method that can be effective is to name files using the format yyyymmddHHMMSS.extension and place them all in a single folder.
+One method that can be effective is to prepend `yyyymmddHHMMSS.` to the filename and place them all in a single folder.
 Once you have renamed a file, you can use Clutter to associate the file name with its description and category.
 
 You can also apply the same principle to organize physical files.
