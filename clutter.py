@@ -135,7 +135,7 @@ def backup():
 @app.template_filter('link')
 def link(line):
     parts = []
-    tag = {'#': 'hash', '$': 'dollar', '^': 'caret'}
+    tag = {'#': 'hash', '$': 'dollar'}
     for word in line.split(' '):
         if word.startswith('http'):
             parts.append(f'<a href="{escape(word)}">{escape(word)}</a>')

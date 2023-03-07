@@ -322,7 +322,7 @@ const postSwap = items => {
 
 const link = line => {
     const parts = [];
-    tag = { '#': 'hash', '$': 'dollar', '^': 'caret' };
+    tag = { '#': 'hash', '$': 'dollar' };
     for (const word of line.split(' ')) {
         if (word.startsWith('http')) {
             parts.push(`<a href="${escape(word)}">${escape(word)}</a>`);

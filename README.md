@@ -276,10 +276,10 @@ By following this convention, you can easily find and sort relevant tasks.
 
 ### Importance
 
-To help you prioritize your items in Clutter, you can use carets (`^`) to signify their importance.
-For example, you can use `^` to indicate that an item is important, and `^5` to indicate that an item is extremely important.
+To help you prioritize your items in Clutter, you can use stars (`$star`) to signify their importance.
+For example, you can use `$star:1` to indicate that an item is important, and `$star:5` to indicate that an item is extremely important.
 
-To sort your items by their importance, you can append `D^` to your search query.
+To sort your items by their importance, you can append `D$star` to your search query.
 This will show you the most important items first, helping you focus on the tasks that require your attention.
 
 ### Pagination
@@ -289,7 +289,7 @@ However, you can view old items by appending the year (`yyyy`) or month (`yyyymm
 
 ### Home page
 
-Pages like [`#tag D^`](http://localhost:12224/?q=%23tag+D^) and [`A$todo:`](http://localhost:12224/?q=A%24todo:) might be useful.
+Pages like [`#tag D$star`](http://localhost:12224/?q=%23tag+D%24star) and [`A$todo:`](http://localhost:12224/?q=A%24todo:) might be useful.
 
 ### Date search
 
