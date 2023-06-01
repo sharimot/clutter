@@ -363,9 +363,3 @@ Simply add the following script to Tampermonkey and customize the keybindings to
 With this script, you can press `<your-favorite-letter-1>` to open `http://localhost:12224/?q=<url>` in the same tab, or press `<your-favorite-letter-2>` to open `http://localhost:12224/?q=<url>` in a new tab.
 
 You can press the plus button at the second row to automatically fill the input field with the text present in the above row.
-
-### Time blocking
-
-When you begin working on a new task, you can create an item like `#doit <task-name>`.
-Once you have completed the task, you can create another item like `#done <task-name>`.
-This can help clarify the context in which the item was added.
