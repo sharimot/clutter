@@ -141,6 +141,8 @@ def link(line):
             parts.append(f'<a href="{escape(word)}">{escape(word)}</a>')
         elif word and word[0] in tag:
             parts.append(f'<span class="{tag[word[0]]}">{escape(word)}</span>')
+        elif word.startswith('/') and len(word) > 1:
+            parts.append(f'<a href="file://{escape(word)}">{escape(word)}</a>')
         else:
             parts.append(escape(word))
     line = ' '.join(parts)
