@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from html import escape
+from pathlib import Path
 from urllib.parse import quote
 import datetime
 import json
@@ -21,8 +22,24 @@ def write(lines):
     with open(path, 'w') as f:
         f.write('\n'.join(lines))
 
+def change(old, new):
+    timestamp = datetime.datetime.now().strftime(f'%Y%m%d%H%M%S')
+    log_path = path + '.log'
+    Path(log_path).touch()
+    with open(log_path, 'r') as f:
+        original = f.read()
+    if old == '':
+        delta = new
+    elif new == '':
+        delta = f'{timestamp}\n{old}'
+    else:
+        delta = f'{timestamp}\n{new}\n{old}'
+    with open(log_path, 'w') as f:
+        f.write(delta + '\n\n' + original)
+
 def push(content):
     header = datetime.datetime.now().strftime('%Y%m%d%H%M%S ')
+    change('', header + content)
     write([header + content] + read()[0])
 
 def parse(q):
@@ -107,6 +124,7 @@ def edit():
     index = n - int(item['id'])
     if lines[index] != item['line']:
         return 'no'
+    change(lines[index], item['revision'])
     lines[index] = item['revision']
     write(lines)
     return 'ok'
@@ -119,6 +137,7 @@ def swap():
         index = n - int(item['id'])
         if lines[index] != item['line']:
             return 'no'
+        change(lines[index], item['revision'])
         lines[index] = item['revision']
         write(lines)
     return 'ok'
