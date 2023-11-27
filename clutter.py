@@ -131,6 +131,7 @@ def edit():
 
 @app.route('/swap', methods=['POST'])
 def swap():
+    backup()
     items = json.loads(request.data.decode('utf-8'))
     lines, n = read()
     for item in items:
@@ -142,7 +143,6 @@ def swap():
         write(lines)
     return 'ok'
 
-@app.route('/backup', methods=['POST'])
 def backup():
     snapshots = os.path.join(os.path.dirname(path), 'snapshots')
     if not os.path.exists(snapshots):
