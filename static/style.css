@@ -84,6 +84,10 @@ pre {
     background-color: aliceblue;
 }
 
+.selected {
+    background-color: lightyellow;
+}
+
 .stuff {
     height: 1em;
 }

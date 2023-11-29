@@ -53,3 +53,11 @@ for (const row of document.getElementById('rows').children) {
 document.querySelectorAll('.left').forEach(element => {
     element.style.visibility = 'visible';
 });
+const highlight = new URL(window.location.href).hash.substring(1);
+if (highlight) {
+    for (const row of document.getElementById('rows').children) {
+        if (row.querySelector('input').value.includes(highlight)) {
+            row.classList.add('selected');
+        }
+    }
+}

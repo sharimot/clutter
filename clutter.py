@@ -166,10 +166,12 @@ def link(line):
             parts.append(escape(word))
     line = ' '.join(parts)
     if re.match(r'\d{14}', line):
-        year = f'<span class="timestamp">{line[:4]}</span>'
-        moment = f'<span class="timestamp">{line[8:14]}</span>'
+        yyyy = f'<span class="timestamp">{line[:4]}</span>'
+        mmdd = f'<a href="/?q={line[:8]}#{line[:14]}">{line[4:8]}</a>'
+        hh = f'<span class="timestamp">{line[8:10]}</span>'
+        mmss = f'<span class="timestamp">{line[10:14]}</span>'
         body = line[14:]
-        line = f'{year}<a href="/?q={line[:8]}">{line[4:8]}</a>{moment}{body}'
+        line = yyyy + mmdd + hh + mmss + body
     return line
 
 if __name__ == '__main__':
