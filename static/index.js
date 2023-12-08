@@ -4,7 +4,6 @@ if (new URLSearchParams(location.search).get('add')) {
 if (performance.getEntriesByType('navigation')[0].type === 'back_forward') {
     location.reload();
 }
-const equal = document.getElementById('equal');
 const search = document.getElementById('search');
 search.addEventListener('keypress', event => {
     if (event.key !== 'Enter') { return; }
@@ -58,6 +57,7 @@ if (highlight) {
     for (const row of document.getElementById('rows').children) {
         if (row.querySelector('input').value.includes(highlight)) {
             row.classList.add('selected');
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
 }

@@ -9,7 +9,7 @@ a {
     text-decoration: none;
 }
 
-a:focus {
+a:not(.left):focus {
     color: blue;
     font-weight: bold;
 }
@@ -26,6 +26,10 @@ input {
     height: 15px;
     margin: 0;
     padding: 0;
+}
+
+ins {
+    text-decoration: none;
 }
 
 pre {
@@ -46,8 +50,20 @@ pre {
     border-radius: 4px;
 }
 
+.block {
+    border-radius: 6px;
+}
+
 .btn {
     cursor: pointer;
+}
+
+.complete {
+    background: whitesmoke;
+}
+
+.delta {
+    color: thistle;
 }
 
 .dollar {
@@ -62,7 +78,6 @@ pre {
     color: lightsteelblue;
     text-align: center;
     user-select: none;
-    visibility: hidden;
     width: 32px;
 }
 

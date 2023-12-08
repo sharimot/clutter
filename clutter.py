@@ -3,6 +3,7 @@ from html import escape
 from pathlib import Path
 from urllib.parse import quote
 import datetime
+import difflib
 import json
 import logging
 import os
@@ -24,7 +25,6 @@ def write(lines):
 
 def change(old, new):
     timestamp = datetime.datetime.now().strftime(f'%Y%m%d%H%M%S')
-    log_path = path + '.log'
     Path(log_path).touch()
     with open(log_path, 'r') as f:
         original = f.read()
@@ -112,6 +112,57 @@ def index():
     else:
         return render_template('index.html', data=data)
 
+@app.route('/log')
+def log():
+    q = request.args.get('q') or ''
+    words = [word.replace('[space]', ' ').lower() for word in q.split()]
+    with open(log_path, 'r') as f:
+        blocks = f.read().split('\n\n')
+    items = []
+    total = 0
+    for block in blocks:
+        block_ = block.lower()
+        if not all(word in block_ for word in words):
+            continue
+        total += 1
+        if total > 1000:
+            continue
+        complete = False
+        lines = block.split('\n')
+        if len(lines) == 1:
+            timestamp = lines[0][:14]
+        elif len(lines) == 2:
+            timestamp = lines[1][:14]
+            lines[1] = f'<del>{escape(lines[1])}</del>'
+        elif len(lines) == 3:
+            timestamp = lines[1][:14]
+            if '#plan' in lines[1] and '|' in lines[1]:
+                complete = lines[0][:8] == lines[1][:8]
+            old, new = '', ''
+            for diff in difflib.ndiff(lines[2], lines[1]):
+                code, letter = diff[0], escape(diff[2])
+                if code == ' ':
+                    old += letter
+                    new += letter
+                elif code == '-':
+                    old += f'<del>{letter}</del>'
+                elif code == '+':
+                    new += f'<ins>{letter}</ins>'
+            lines[1], lines[2] = new, old
+        else:
+            continue
+        yyyy = f'<span class="timestamp">{escape(lines[0][:4])}</span>'
+        log_q = f'/log?q={quote(lines[0][:8])}#{quote(lines[0][:14])}'
+        mmdd = f'<a href="{log_q}">{escape(lines[0][4:8])}</a>'
+        hhmmss = f'<span class="timestamp">{escape(lines[0][8:14])}</span>'
+        body_ = escape(lines[0][14:])
+        body = f'<ins>{body_}</ins>' if body_ else ''
+        lines[0] = yyyy + mmdd + hhmmss + body
+        href = '/?q=' + quote(timestamp)
+        items.append({'href': href, 'lines': lines, 'complete': complete})
+    data = {'title': q or 'Log', 'q': q, 'items': items, 'total': total}
+    return render_template('log.html', data=data)
+
 @app.route('/add', methods=['POST'])
 def add():
     push(request.data.decode('utf-8'))
@@ -169,7 +220,7 @@ def link(line):
         yyyy = f'<span class="timestamp">{line[:4]}</span>'
         mmdd = f'<a href="/?q={line[:8]}#{line[:14]}">{line[4:8]}</a>'
         hh = f'<span class="timestamp">{line[8:10]}</span>'
-        mmss = f'<span class="timestamp">{line[10:14]}</span>'
+        mmss = f'<a href="/log?q={line[:14]}">{line[10:14]}</a>'
         body = line[14:]
         line = yyyy + mmdd + hh + mmss + body
     return line
@@ -180,5 +231,6 @@ if __name__ == '__main__':
         print('Path required.')
         sys.exit()
     path = argv[1]
+    log_path = path + '.log'
     port = argv[2] if len(argv) > 2 else '12224'
     app.run(port=port)

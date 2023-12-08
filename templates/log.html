@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+        <meta charset="utf-8">
+        <title>{{ data['title'] }}</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <link rel="shortcut icon" type="image/svg+xml" href="/static/favicon.svg"/>
+    </head>
+    <body>
+        <div class="row">
+            <a class="left" href="/">|</a>
+            <div>{{ ('&nbsp;' * (14 - data['total']|string|length) + data['total']|string + '&nbsp;')|safe }}</div>
+            <input id="search" spellcheck="false" value="{{ data['q'] }}">
+        </div>
+        <div id="blocks">{% for item in data['items'] %}
+            <div class="stuff"></div>
+            <div class="block{% if item['complete'] %} complete{% endif %}">{% for line in item['lines'] %}
+                <div class="row">{% if loop.first %}
+                    <a class="left" href="{{ item.href }}">~</a>{% else %}
+                    <div class="left"></div>{% endif %}
+                    <pre class="delta">{{ line|safe }}</pre>
+                </div>{% endfor %}
+            </div>{% endfor %}
+        </div>{% if data['total'] > 1000 %}
+        <div class="stuff"></div>
+        <div class="row">
+            <div class="left">:</div>
+            <pre>OVERFLOW</pre>
+        </div>{% endif %}
+        <script src="/static/log.js"></script>
+    </body>
+</html>
