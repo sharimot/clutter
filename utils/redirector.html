@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Redirecting...</title>
+    </head>
+    <body>
+        <script>
+            let q = new URLSearchParams(window.location.search).get('q');
+            q = q.slice(0, q.length - 1);
+            const prefix = 'chrome-extension://nacjakoppgmdcpemlfnfegmlhipddanj/';
+            if (q.startsWith(prefix)) {
+                q = q.slice(prefix.length, q.length);
+            }
+            else {
+                q = q.toLowerCase();
+            }
+            window.location.href = `http://localhost:12224/?q=${encodeURIComponent(q)}`;
+        </script>
+    </body>
+</html>
