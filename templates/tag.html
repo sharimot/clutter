@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+        <meta charset="utf-8">
+        <title>{{ data['title'] }}</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <link rel="shortcut icon" type="image/svg+xml" href="/static/favicon.svg"/>
+    </head>
+    <body>
+        <div class="row">
+            <div class="left"></div>
+            <div>{{ ('&nbsp;' * (14 - data['tags']|length|string|length) + data['tags']|length|string + '&nbsp;')|safe }}</div>
+            <input id="search" spellcheck="false" value="{{ data['q'] }}">
+        </div>
+        <div class="stuff"></div>
+        <div id="rows">{% for tag in data['tags'] %}
+            <div class="row">
+                <div class="left"></div>
+                <pre>{{ ('&nbsp;' * (14 - tag[1]|string|length) + tag[1]|string)|safe }} <span class="hash">{{ tag[0] }}</span></pre>
+            </div>{% endfor %}
+        </div>
+        <script src="/static/tag.js"></script>
+    </body>
+</html>

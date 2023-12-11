@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from html import escape
 from pathlib import Path
 from urllib.parse import quote
+import collections
 import datetime
 import difflib
 import json
@@ -111,6 +112,21 @@ def index():
         return render_template('swap.html', data=data)
     else:
         return render_template('index.html', data=data)
+
+@app.route('/tag')
+def tag():
+    request.args.get('add') and push(request.args.get('add'))
+    q = request.args.get('q') or ''
+    query = parse(q)
+    data = process(query)
+    tags = collections.Counter()
+    for item in data['items']:
+        for word in item['line'].split(' '):
+            if word.startswith('#'):
+                tags[word] += 1
+    data['title'] = data['q'] or 'Tag'
+    data['tags'] = tags.most_common()
+    return render_template('tag.html', data=data)
 
 @app.route('/log')
 def log():
