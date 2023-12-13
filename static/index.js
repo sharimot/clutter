@@ -1,26 +1,34 @@
 if (new URLSearchParams(location.search).get('add')) {
     history.replaceState({}, '', '/');
 }
+
 if (performance.getEntriesByType('navigation')[0].type === 'back_forward') {
     location.reload();
 }
+
 const search = document.getElementById('search');
+
 search.addEventListener('keypress', event => {
     if (event.key !== 'Enter') { return; }
     const q = encodeURIComponent(search.value).replaceAll('%20', '+');
     location.href = '/?q=' + q;
 });
+
 const add = document.getElementById('add');
+
 add.addEventListener('keypress', async event => {
     if (event.key !== 'Enter') { return; }
     await fetch('/add', { method: 'POST', body: add.value });
     location.reload();
 });
+
 const plus = document.getElementById('plus');
+
 plus.addEventListener('click', event => {
     add.value = search.value;
     add.focus();
 });
+
 for (const row of document.getElementById('rows').children) {
     const edit = row.querySelector('div');
     const pre = row.querySelector('pre');
@@ -49,10 +57,9 @@ for (const row of document.getElementById('rows').children) {
         location.reload();
     });
 };
-document.querySelectorAll('.left').forEach(element => {
-    element.style.visibility = 'visible';
-});
+
 const highlight = new URL(window.location.href).hash.substring(1);
+
 if (highlight) {
     for (const row of document.getElementById('rows').children) {
         if (row.querySelector('input').value.includes(highlight)) {

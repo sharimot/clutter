@@ -1,4 +1,5 @@
 const format = number => number.toString().padStart(2, '0');
+
 const clock = () => {
     const time = new Date();
     const year = time.getFullYear();
@@ -11,4 +12,5 @@ const clock = () => {
     document.getElementById('now').innerHTML = string;
     setTimeout(clock, 1000);
 };
+
 clock();
