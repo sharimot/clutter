@@ -111,6 +111,7 @@ def index():
     if query['swap']:
         return render_template('swap.html', data=data)
     else:
+        data['clock'] = datetime.datetime.now().strftime(f'%Y%m%d%H%M%S')
         return render_template('index.html', data=data)
 
 @app.route('/tag')
