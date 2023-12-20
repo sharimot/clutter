@@ -9,30 +9,30 @@
     </head>
     <body>
         <div class="row">
-            <div class="btn left" id="equal">=</div>
+            <div class="btn left" id="replace">%</div>
             <div>{{ data['count']|safe }}</div>
             <input id="search" spellcheck="false" value="{{ data['q'] }}">
         </div>
         <div class="stuff"></div>
-        <div class="row swap">
+        <div class="row">
             <div class="left"></div>
-            <div id="swap">{{ ('&nbsp;' * 5)|safe }}swap{{ ('&nbsp;' * 5)|safe }}</div>
+            <div>{{ ('&nbsp;' * 14)|safe }}</div>
             <div id="message">&nbsp;{{ data['message']|safe }}</div>
         </div>
         <div class="stuff"></div>
         <div id="rows">{% for item in data['items'] %}
             <div id="{{ item['id'] }}">
                 <div class="row">
-                    <div class="left">-</div>
-                    <pre class="original">{{ item['line'] }}</pre>
+                    <a class="left" href="{{ item['href'] }}">~</a>
+                    <pre class="delta">{{ item['revision']|safe }}</pre>
                 </div>
                 <div class="row">
-                    <div class="left">+</div>
-                    <pre class="revision">{{ item['revision'] }}</pre>
+                    <div class="left"></div>
+                    <pre class="delta">{{ item['line']|safe }}</pre>
                 </div>
                 <div class="stuff"></div>
             </div>{% endfor %}
         </div>
-        <script src="/static/swap.js"></script>
+        <script src="/static/replace.js"></script>
     </body>
 </html>

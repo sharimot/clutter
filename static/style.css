@@ -43,13 +43,6 @@ pre {
     outline: none;
 }
 
-#swap {
-    color: dodgerblue;
-    cursor: pointer;
-    background: aliceblue;
-    border-radius: 4px;
-}
-
 .block {
     border-radius: 6px;
 }
@@ -81,21 +74,13 @@ pre {
     width: 32px;
 }
 
-.original {
-    color: skyblue;
-}
-
-.revision {
-    color: dodgerblue;
-}
-
 .row {
     border-radius: 6px;
     display: flex;
     line-height: 1.25em;
 }
 
-.row:not(.swap):hover {
+.row:hover {
     background-color: aliceblue;
 }
 

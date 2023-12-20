@@ -44,7 +44,7 @@ def push(content):
     write([header + content] + read()[0])
 
 def parse(q):
-    query = {'q': q, 'units': [], 'sort': None, 'swap': None}
+    query = {'q': q, 'units': [], 'sort': None, 'replace': None}
     for word in q.split():
         head, tail = word[0], word[1:]
         convert = lambda word: word.replace('[space]', ' ').lower()
@@ -52,10 +52,10 @@ def parse(q):
             chunks = word.split(word[1])
             if len(chunks) != 4:
                 continue
-            source = chunks[1].replace('[space]', ' ')
-            target = chunks[2].replace('[space]', ' ')
-            query['swap'] = {'source': source, 'target': target}
-            query['units'].append({'match': True, 'word': source.lower()})
+            old = chunks[1].replace('[space]', ' ')
+            new = chunks[2].replace('[space]', ' ')
+            query['replace'] = {'old': old, 'new': new}
+            query['units'].append({'match': True, 'word': old.lower()})
         elif len(word) > 1 and head in {'A', 'D'}:
             query['sort'] = {'reverse': head == 'D', 'by': convert(tail)}
             query['units'].append({'match': True, 'word': convert(tail)})
@@ -67,7 +67,7 @@ def parse(q):
 
 def process(query):
     (lines, n), data, items = read(), {}, []
-    units, sort, swap = query['units'], query['sort'], query['swap']
+    units, sort, replace = query['units'], query['sort'], query['replace']
     for i, line in enumerate(lines):
         if line == '':
             continue
@@ -77,24 +77,28 @@ def process(query):
     if sort:
         key = lambda item: item['line'].lower().split(sort['by'], 1)[1]
         items = sorted(items, key=key, reverse=sort['reverse'])
-    if swap:
-        check_case = lambda item: swap['source'] in item['line']
+    if replace:
+        check_case = lambda item: replace['old'] in item['line']
         items = list(filter(check_case, items))
-        source, target = swap['source'], swap['target']
-        q = quote(target.lower().replace(' ', '[space]'))
-        link = f'<a href="/?q={q}">{escape(target)}</a>'
+        old, new = escape(replace['old']), escape(replace['new'])
+        q = quote(replace['new'].lower().replace(' ', '[space]'))
+        link = f'<a href="/?q={q}">{new}</a>'
         warning = f'"{link}" already exists!'
-        data['message'] = warning if target in '\n'.join(lines) else ''
+        data['message'] = warning if new in '\n'.join(lines) else ''
         for item in items:
-            item['revision'] = item['line'].replace(source, target)
-    date = lambda k: items[k]['line'][:8]
-    for i in range(len(items)):
-        if sort:
-            items[i]['left'] = '─'
-            continue
-        begin = (i == 0 or items[i - 1]['left'] in {'┴', '─'})
-        close = (i == len(items) - 1 or date(i + 1) != date(i))
-        items[i]['left'] = [['┼', '┴'], ['┬', '─']][begin][close]
+            line = escape(item['line'])
+            item['href'] = '/?q=' + quote(item['line'][:14])
+            item['line'] = line.replace(old, f'<del>{old}</del>')
+            item['revision'] = line.replace(old, f'<ins>{new}</ins>')
+    else:
+        date = lambda k: items[k]['line'][:8]
+        for i in range(len(items)):
+            if sort:
+                items[i]['left'] = '─'
+                continue
+            begin = (i == 0 or items[i - 1]['left'] in {'┴', '─'})
+            close = (i == len(items) - 1 or date(i + 1) != date(i))
+            items[i]['left'] = [['┼', '┴'], ['┬', '─']][begin][close]
     count = '&nbsp;' * (14 - len(str(len(items)))) + str(len(items)) + '&nbsp;'
     data['title'], data['q'] = query['q'] or 'Clutter', query['q']
     data['items'], data['count'] = items, count
@@ -108,8 +112,8 @@ def index():
     q = request.args.get('q') or ''
     query = parse(q)
     data = process(query)
-    if query['swap']:
-        return render_template('swap.html', data=data)
+    if query['replace']:
+        return render_template('replace.html', data=data)
     else:
         data['clock'] = datetime.datetime.now().strftime(f'%Y%m%d%H%M%S')
         return render_template('index.html', data=data)
@@ -197,18 +201,21 @@ def edit():
     write(lines)
     return 'ok'
 
-@app.route('/swap', methods=['POST'])
-def swap():
+@app.route('/replace', methods=['POST'])
+def replace():
     backup()
     items = json.loads(request.data.decode('utf-8'))
     lines, n = read()
+    deltas = []
     for item in items:
         index = n - int(item['id'])
         if lines[index] != item['line']:
             return 'no'
-        change(lines[index], item['revision'])
+        deltas.append((lines[index], item['revision']))
         lines[index] = item['revision']
-        write(lines)
+    for delta in deltas:
+        change(delta[0], delta[1])
+    write(lines)
     return 'ok'
 
 def backup():
