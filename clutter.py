@@ -141,6 +141,7 @@ def log():
         blocks = f.read().split('\n\n')
     items = []
     total = 0
+    tokenize = lambda line: list(filter(None, re.split(r'(\W)', line)))
     for block in blocks:
         block_ = block.lower()
         if not all(word in block_ for word in words):
@@ -160,15 +161,15 @@ def log():
             if '#plan' in lines[1] and '|' in lines[1]:
                 complete = lines[0][:8] == lines[1][:8]
             old, new = '', ''
-            for diff in difflib.ndiff(lines[2], lines[1]):
-                code, letter = diff[0], escape(diff[2])
+            for diff in difflib.ndiff(tokenize(lines[2]), tokenize(lines[1])):
+                code, token = diff[0], escape(diff[2:])
                 if code == ' ':
-                    old += letter
-                    new += letter
+                    old += token
+                    new += token
                 elif code == '-':
-                    old += f'<del>{letter}</del>'
+                    old += f'<del>{token}</del>'
                 elif code == '+':
-                    new += f'<ins>{letter}</ins>'
+                    new += f'<ins>{token}</ins>'
             lines[1], lines[2] = new, old
         else:
             continue
