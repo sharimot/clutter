@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/svg" href="https://sharimot.github.io/logo.svg">
+        <link rel="stylesheet" href="https://sharimot.github.io/style.css">
+        <title>Clutter</title>
+    </head>
+    <body>
+        <h1>Clutter</h1>
+        <div class="middle"><em>The nimblest personal knowledge base</em></div>
+        <div class="middle">by <a href="https://sharimot.github.io/">sharimot</a></div>
+        <ul>
+            <li>GitHub repo: <a href="https://github.com/sharimot/clutter">https://github.com/sharimot/clutter</a></li>
+            <li>
+                Use cases:
+                <ul>
+                    <li>Notebook</li>
+                    <li>Task manager</li>
+                    <li>Calendar</li>
+                    <li>File manager</li>
+                    <li>Diary</li>
+                    <li>Bookmark</li>
+                </ul>
+            </li>
+            <li>
+                Disrupting:
+                <ul>
+                    <li>Notion</li>
+                    <li>Evernote</li>
+                    <li>Obsidian</li>
+                    <li>Roam Research</li>
+                    <li>Todoist</li>
+                    <li>etc.</li>
+                </ul>
+            </li>
+        </ul>
+        <h2>Installation</h2>
+        <ol>
+            <li>
+                Requirements:
+                <ul>
+                    <li>Mac or PC. (Phones and tablets are not supported.)</li>
+                    <li>python3</li>
+                    <li>pip</li>
+                </ul>
+            </li>
+            <li>
+                Create <code>clutter.txt</code> somewhere.
+                <ul>
+                    <li>This is a plain text file used to store app data.</li>
+                </ul>
+            </li>
+            <li>
+                Clone the repository from GitHub:
+                <pre>git clone https://github.com/sharimot/clutter</pre>
+            </li>
+            <li>
+                Change into the directory:
+                <pre>cd clutter</pre>
+            </li>
+            <li>
+                Install dependencies:
+                <pre>python3 -m pip install -r requirements.txt</pre>
+            </li>
+            <li>
+                Run Clutter:
+                <pre>python3 clutter.py /path/to/clutter.txt</pre>
+            </li>
+            <li>
+                Open the browser and access Clutter at <a href="http://localhost:12224/">http://localhost:12224/</a>.
+                <pre>12224 == int(hashlib.sha256('clutter'.encode('utf-8')).hexdigest()[:4], 16)</pre>
+                It is possible to specify a different port number (e.g., 9999):
+                <pre>python3 clutter.py /path/to/clutter.txt 9999</pre>
+            </li>
+        </ol>
+        <h2>Manual</h2>
+        <ul>
+            <li>
+                Add:
+                <ol>
+                    <li>
+                        Click on the invisible input field located in the second row.
+                        <ul>
+                            <li>The input field is indicated by the <code>+</code> sign.</li>
+                        </ul>
+                    </li>
+                    <li>Type a text to add. Line breaks are not allowed.</li>
+                    <li>
+                        Press the Enter key.
+                        <ul>
+                            <li>The timestamp is automatically included in the format <code>yyyymmddHHMMSS</code>.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                Edit:
+                <ol>
+                    <li>Click on the <code>-</code> button preceding the item to edit.</li>
+                    <li>Make necessary changes to it.</li>
+                    <li>Press the Enter key to save the edits.</li>
+                </ol>
+            </li>
+            <li>
+                Find:
+                <ul>
+                    <li>
+                        To search for items, use the invisible input field in the top row.
+                        <ul>
+                            <li>The input field is indicated by the <code>=</code> sign.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Only items that contain the search string are shown.
+                        <ul>
+                            <li>
+                                The search is case-insensitive (i.e., the search results for <code>hello</code> and <code>hElLo</code> are identical).
+                            </li>
+                        </ul>
+                    </li>
+                    <li>To search for items that contain multiple strings (e.g., <code>hello</code> and <code>world</code>), type both strings separated by a space (e.g., <code>hello world</code>).</li>
+                    <li>
+                        To search for items that contain a specific phrase (e.g., <code>hello world</code>), replace the space with <code>[space]</code>.
+                        <ul>
+                            <li>When the query is <code>hello[space]world</code>, items that contain <code>hello world</code> (with a space between <code>hello</code> and <code>world</code>) are shown.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        To search for items that do not contain a specific string, use the <code>N</code> operator.
+                        <ul>
+                            <li>When the query is <code>hello Nworld</code>, items that contain <code>hello</code> but do not contain <code>world</code> are shown.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        The number of items that match the query is shown in the top left corner.
+                        <ul>
+                            <li>Clutter displays a maximum of 1000 items.</li>
+                            <li>To view old items, include the year (in the format <code>yyyy</code>) in the query.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Sort:
+                <ul>
+                    <li>
+                        Use the <code>A</code> or <code>D</code> prefixes before the keywords.
+                        <ul>
+                            <li><code>A</code> stands for ascending order.</li>
+                            <li><code>D</code> stands for descending order.</li>
+                        </ul>
+                    </li>
+                    <li>The sorting is based on the string after the keyword prefixed by <code>A</code> or <code>D</code>.</li>
+                    <li>
+                        Suppose that the search result for <code>http</code> is:
+                        <pre>20200103000000 https://example.com/c.html
+20210102000000 https://example.com/a.html
+20220101000000 https://example.com/b.html</pre>
+                    </li>
+                    <li>
+                        The search result for <code>Ahttp</code> is:
+                        <pre>20210102000000 https://example.com/a.html
+20220101000000 https://example.com/b.html
+20200103000000 https://example.com/c.html</pre>
+                    </li>
+                    <li>
+                        When the query is <code>Nquick brown Dfox Njumps</code>:
+                        <ul>
+                            <li>
+                                Clutter shows items that:
+                                <ul>
+                                    <li>do not contain <code>quick</code>,</li>
+                                    <li>contain <code>brown</code>,</li>
+                                    <li>contain <code>fox</code>,</li>
+                                    <li>and do not contain <code>jumps</code>,</li>
+                                </ul>
+                            </li>
+                            <li>and it sorts them by the string after <code>fox</code> in descending order.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Replace (substitute):
+                <ul>
+                    <li>
+                        To replace <code>old</code> with <code>new</code>:
+                        <ol>
+                            <li>Set the query to <code>S|old|new|</code>.</li>
+                            <li>Click on the <code>%</code> button in the top left.</li>
+                        </ol>
+                    </li>
+                    <li>Unlike find, the <code>old</code> and <code>new</code> in a substitute query are <em>case-sensitive</em>.</li>
+                    <li>
+                        The delimiter (<code>|</code>) may be any letter.
+                        <ul>
+                            <li>To replace <code>:|</code> with <code>:)</code>, set the query to <code>S/:|/:)/</code>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        The substitute query may contain additional conditions.
+                        <ul>
+                            <li>To replace <code>old</code> with <code>new</code> only in items that contain <code>yes</code> but do not contain <code>no</code>, set the query to <code>S|old|new| yes Nno</code>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        When <code>old</code> or <code>new</code> contains a space character, use <code>[space]</code>.
+                        <ul>
+                            <li>To replace <code>hello world</code> with <code>good morning world</code>, set the query to <code>S|hello[space]world|good[space]morning[space]world|</code>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        The warning <code>"new" already exists!</code> indicates that the <code>new</code> string is already present in Clutter.
+                        <ul>
+                            <li>In such a situation, redoing the substitute operation may be difficult.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        When doing a substitute operation, a backup file is automatically saved in the <code>snapshots</code> folder as <code>yyyymmddHHMMSS.clutter.txt</code>.
+                        <ul>
+                            <li>The <code>snapshots</code> folder is located in the same directory as <code>clutter.txt</code>.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Log:
+                <ul>
+                    <li>The log file is automatically created as <code>clutter.txt.log</code> in the same folder as <code>clutter.txt</code>.</li>
+                    <li>The log file is updated on add, edit (including delete), or replace.</li>
+                    <li>The log file is made up of blocks that are separated by blank lines.</li>
+                    <li>
+                        A block is made up of single/double/triple row(s).
+                        <ul>
+                            <li>Single row blocks (add): just the new line.</li>
+                            <li>Double row blocks (physical delete): the timestamp and the old line.</li>
+                            <li>Triple row blocks (non-delete edit or replace): timestamp, new, and old.</li>
+                        </ul>
+                    </li>
+                    <li><code>A</code>, <code>D</code>, <code>N</code>, and <code>S</code> are not supported in the log search.</li>
+                </ul>
+            </li>
+        </ul>
+        <h2>Best practices</h2>
+        <ul>
+            <li>
+                Command line:
+                <ul>
+                    <li>Avoid typing out the command <code>python3 clutter.py /path/to/clutter.txt</code>.</li>
+                    <li>
+                        Add the following line to the <code>~/.bashrc</code> file:
+                        <pre>alias clutter-run="python3 /path/to/clutter/clutter.py /path/to/clutter.txt"</pre>
+                    </li>
+                    <li>Run <code>clutter-run</code> to start Clutter.</li>
+                </ul>
+            </li>
+            <li>
+                <a href="https://chromewebstore.google.com/detail/vimium-c-all-by-keyboard/hfjbmagddngcpeloejdejnfgbamkjaeg">Vimium C</a>:
+                <ul>
+                    <li>A highly recommended Chrome extension.</li>
+                    <li>Control the browser using only the keyboard.</li>
+                </ul>
+            </li>
+            <li>
+                Shortcuts:
+                <ul>
+                    <li>Use <a href="https://support.google.com/chrome/answer/95426">site search shortcuts</a>.</li>
+                    <li>Find: <code>http://localhost:12224/?q=%s</code></li>
+                    <li>Add: <code>http://localhost:12224/?add=%s</code></li>
+                    <li>Log: <code>http://localhost:12224/log?q=%s</code></li>
+                </ul>
+            </li>
+            <li>
+                Formatted find:
+                <ul>
+                    <li>Remove unnecessary parts from the URL in the <a href="https://chromewebstore.google.com/detail/pdf-viewer-for-vimium-c/nacjakoppgmdcpemlfnfegmlhipddanj">PDF Viewer for Vimium C</a> (<code>chrome-extension://nacjakoppgmdcpemlfnfegmlhipddanj/...</code>).</li>
+                    <li>Decapitalize the query to avoid conflict with <code>A</code>, <code>D</code>, and <code>N</code>.</li>
+                    <li>Use <code>/path/to/clutter/utils/redirector.html?q=%sx</code> as a site search shortcut.</li>
+                    <li>Do not use this when dealing with regular URLs.</li>
+                </ul>
+            </li>
+            <li>
+                Tagging:
+                <ul>
+                    <li>Hashtags (<code>#tagname</code>) and cashtags (<code>$tagname</code>) are colorized.</li>
+                    <li>Include a hashtag in every item that is added to Clutter.</li>
+                    <li>When creating a new tag, add an item like <code>#tag #newtagname</code> to list tags.</li>
+                    <li>
+                        To spot misspelled or undeclared tags, run:
+                        <pre>python3 /path/to/clutter/utils/spot.py /path/to/clutter.txt</pre>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Tag nesting:
+                <ul>
+                    <li>Use hierarchy to list related tags.</li>
+                    <li><code>#tag #parent #child</code></li>
+                    <li><code>#tag #grandparent #parent #child</code></li>
+                    <li><code>#tag #tagname $root</code> (for root tags)</li>
+                </ul>
+            </li>
+            <li>
+                Tag counter:
+                <ul>
+                    <li>Visit <a href="http://localhost:12224/tag">http://localhost:12224/tag?q=%s</a> to view the number of tags.</li>
+                </ul>
+            </li>
+            <li>
+                Timestamping:
+                <ul>
+                    <li>Copy and paste the current date and time (in the format <code>yyyymmddHHMMSS</code>).</li>
+                    <li>Mac users can use Karabiner-Elements.</li>
+                    <li>
+                        Add the following object into <code>profiles.complex_modifications.rules</code> of <code>~/.config/karabiner/karabiner.json</code>.
+                        <pre>{
+    "description": "datetime",
+    "manipulators": [
+        {
+            "from": {
+                "key_code": "&lt;favorite-letter&gt;",
+                "modifiers": {
+                    "mandatory": [
+                        "command"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "shell_command": "date +'%Y%m%d%H%M%S' | tr -d '\n' | pbcopy"
+                }
+            ],
+            "type": "basic"
+        }
+    ]
+}</pre>
+                    </li>
+                    <li>Press the command key and <code>&lt;favorite-letter&gt;</code> to copy the current date and time to the clipboard and then paste it as a timestamp.</li>
+                </ul>
+            </li>
+            <li>
+                Task management:
+                <ul>
+                    <li>Denote the completion time using <code>$done:yyyymmddHHMMSS</code>.</li>
+                    <li>To sort items by completion time, include <code>D$done</code> in the query.</li>
+                </ul>
+            </li>
+            <li>
+                Deleting an item:
+                <ul>
+                    <li>
+                        Physical deletion: replace the item with a blank.
+                        <ul>
+                            <li>Select all, delete, and enter.</li>
+                        </ul>
+                    </li>
+                    <li>Logical deletion: add a <code>$trash</code> tag.</li>
+                </ul>
+            </li>
+            <li>
+                Sorting by importance:
+                <ul>
+                    <li>Use <code>$star:&lt;n&gt;</code> or whatever to signify the importance of an item.</li>
+                    <li>To sort items by importance, include <code>D$star</code> in the query.</li>
+                    <li>Site search shortcut: <code>http://localhost:12224/?q=D%24star+%s</code></li>
+                </ul>
+            </li>
+            <li>
+                Daily review:
+                <ul>
+                    <li>The date part of the timestamp is clickable.</li>
+                    <li>Click on the date to see what happened on that day.</li>
+                </ul>
+            </li>
+            <li>
+                File management:
+                <ul>
+                    <li>Prepend <code>yyyymmddHHMMSS.</code> to the filename.</li>
+                    <li>Place all files in a single folder.</li>
+                    <li>Add to Clutter an item with a file path, a description, and a tag.</li>
+                    <li>Strings that start with <code>/</code> can be copied with Vimium C's <code>LinkHints.activateCopyLinkUrl</code>.</li>
+                </ul>
+            </li>
+            <li>
+                Using Clutter across multiple devices:
+                <ul>
+                    <li>Sync <code>clutter.txt</code> and <code>clutter.txt.log</code>.</li>
+                    <li>Use cloud storage services like Dropbox or Google Drive.</li>
+                </ul>
+            </li>
+            <li>
+                Bookmarking:
+                <ul>
+                    <li>Check whether the current page's URL has been included in Clutter.</li>
+                    <li>
+                        Using Tampermonkey:
+                        <pre>// ==UserScript==
+// @name         clutter
+// @version      1.0.0
+// @description  Easily search URLs.
+// @author       sharimot
+// @match        *://*/*
+// @icon         https://raw.githubusercontent.com/sharimot/clutter/main/static/favicon.svg
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    window.addEventListener('keydown', event =&gt; {
+        if (event.target.matches('input')) { return; }
+        if (event.target.matches('textarea')) { return; }
+        if (event.target.closest('[contenteditable]')) { return; }
+        const q = encodeURIComponent(location.href.split('#')[0]);
+        const url = `http://localhost:12224/?q=${q}`;
+        if (event.key === '&lt;favorite-letter-1&gt;') {
+            window.location.href = url;
+        }
+        if (event.key === '&lt;favorite-letter-2&gt;') {
+            window.open(url, '_blank').focus();
+        }
+    });
+})();</pre>
+                    </li>
+                    <li>Press <code>&lt;favorite-letter-1&gt;</code> to open Clutter in the same tab.</li>
+                    <li>Press <code>&lt;favorite-letter-2&gt;</code> to open Clutter in a new tab.</li>
+                    <li>Click on the <code>+</code> button to copy the query to the input field.</li>
+                </ul>
+            </li>
+            <li>
+                Planning:
+                <ul>
+                    <li>Make an hourly timetable for tomorrow.</li>
+                    <li>It also serves as a lifelog.</li>
+                    <li>
+                        Programmatically create a reverse chronological sequence of lines in the format
+                        <pre>yyyymmddHH0000 #plan </pre>
+                        and append it to the bottom of <code>clutter.txt</code>.
+                    </li>
+                    <li>
+                        When planning, edit it like this:
+                        <pre>yyyymmddHH0000 #plan #tagname</pre>
+                    </li>
+                    <li>
+                        When done, edit it like this with <code>|</code>:
+                        <pre>yyyymmddHH0000 #plan #tagname | description</pre>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Screen recording:
+                <ul>
+                    <li>
+                        Mac users can add the following snippet to the <code>.bashrc</code>.
+                        <pre>record() {
+    local timestamp=$(date +"%Y%m%d%H%M%S")
+    ffmpeg -f avfoundation -i "1:0" -r 15 -s 1280x800 "/path/to/videos/${timestamp}.mp4"
+}</pre>
+                    </li>
+                    <li>This makes it easier to see what happened at a particular moment.</li>
+                </ul>
+            </li>
+            <li>
+                Important pages:
+                <ul>
+                    <li><code>#tag D$star</code> for choosing the plan.</li>
+                    <li><code>#plan yyyymm N|</code> for viewing and editing plans.</li>
+                    <li><code>#plan |</code> for viewing the past.</li>
+                </ul>
+            </li>
+        </ul>
+    </body>
+</html>
